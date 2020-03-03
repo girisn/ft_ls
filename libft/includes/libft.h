@@ -18,6 +18,7 @@
 # include <string.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include "ft_printf.h"
 
 # define BUFF_SIZE 4
 

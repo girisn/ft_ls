@@ -5,9 +5,9 @@ HEADER = unistd.h, fcntl.h - макросы (константы)
 						(errno = EACCESS (доступ запрещен) либо EBADF (недействительный номер (fd?) файла))
 
 HEADER = dirent.h
-	dir				*opendir(char *dirname) - NULL при ошибке (errno = ENOENT (каталог не найден) либо ENOMEM (нехватка памяти))
-	struct dirent	*readdir(dir *ptr) - d_name в структуре содержит имя следующего файла в каталоге (по одному файлу за раз), в конце NULL
-	int				closedir(dir *ptr) - 0 в случае успеха, -1 иначе (errno = EBADF)
+	DIR				*opendir(char *dirname) - NULL при ошибке (errno = ENOENT (каталог не найден) либо ENOMEM (нехватка памяти))
+	struct dirent	*readdir(DIR *ptr) - d_name в структуре содержит имя следующего файла в каталоге (по одному файлу за раз), в конце NULL
+	int				closedir(DIR *ptr) - 0 в случае успеха, -1 иначе (errno = EBADF)
 struct dirent
 {
 	char d_name[13];
