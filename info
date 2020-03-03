@@ -1,0 +1,109 @@
+										AVAILABLE FUNCTIONS
+
+HEADER = unistd.h, fcntl.h - макросы (константы)
+	int				write(int fd, char *str, int n) - возвращает кол-во считанных байт или -1 в случае ошибки
+						(errno = EACCESS (доступ запрещен) либо EBADF (недействительный номер (fd?) файла))
+
+HEADER = dirent.h
+	dir				*opendir(char *dirname) - NULL при ошибке (errno = ENOENT (каталог не найден) либо ENOMEM (нехватка памяти))
+	struct dirent	*readdir(dir *ptr) - d_name в структуре содержит имя следующего файла в каталоге (по одному файлу за раз), в конце NULL
+	int				closedir(dir *ptr) - 0 в случае успеха, -1 иначе (errno = EBADF)
+struct dirent
+{
+	char d_name[13];
+};
+	 
+HEADER = sys/stat.h
+	int				stat(char *filename, struct stat *statbuf) - вносит в statbuf информацию, содержащуюся в filename. (Структура stat в файле stat.h)
+						Успех - 0, неудача - -1 (errno() = ENOENT)
+	int				lstat(const char *filename, struct stat *statbuf) - то же самое, что stat, но в случае символьных ссылок возвращает информацию о ссылке,
+						а не о файле, на который она указывает.
+struct stat {
+    dev_t     st_dev;         /* ID устройства с файлом */
+    ino_t     st_ino;         /* номер inode */
+    mode_t    st_mode;        /* права доступа */
+    nlink_t   st_nlink;       /* кол-во жёстких ссылок */
+    uid_t     st_uid;         /* ID пользователя-владельца */
+    gid_t     st_gid;         /* ID группы-владельца */
+    dev_t     st_rdev;        /* ID устройства (если это спец. файл (устройство)) */
+    off_t     st_size;        /* полный размер в байтах */
+    blksize_t st_blksize;     /* размер блока ввода-вывода
+                                 файловой системы */
+    blkcnt_t  st_blocks;      /* кол-во выделенных блоков по 512Б */
+    /* Начиная с Linux 2.6, ядро поддерживает точность до
+       наносекунд в следующих полям меток времени. */
+    time_t    st_atime;    /* время последнего доступа */
+    time_t    st_mtime;    /* время последней модификации */
+    time_t    st_ctime;    /* время последнего изменения */
+};
+https://www.opennet.ru/cgi-bin/opennet/man.cgi?topic=lstat - макросы + инфо
+http://ru.manpages.org/stat/2
+
+HEADER = pwd.h, sys/types.h
+	struct passwd	getpwuid(uid_t *name) - возвращает указатель на структуру, содержащую поля строки из файла /etc/passwd для записи,
+						совпадающей с идентификатором пользователя uid. NULL при ошибке или если запись не найдена
+struct passwd {
+	char    *pw_name;       /* имя пользователя */
+	char    *pw_passwd;     /* пароль пользователя */
+	uid_t   pw_uid;         /* id пользователя */
+	gid_t   pw_gid;         /* id группы */
+    char    *pw_gecos;      /* настоящее имя */
+    char    *pw_dir;        /* домашний каталог */
+    char    *pw_shell;      /* программа-оболочка */
+};
+https://www.opennet.ru/man.shtml?topic=getpwuid&category=3&russian=0 - ошибки
+
+HEADER = grp.h
+	struct group	*getgrgid(git_t gid) - возвращает указатель на структуру, содержащую информацию из файла /etc/group о группе,
+						идентификатор которой совпадает с gid.
+struct group {
+    char    *gr_name;        /* название группы */
+    char    *gr_passwd;      /* пароль группы */
+    gid_t   gr_gid;          /* идентификатор группы */
+    char    **gr_mem;        /* члены группы */
+};
+https://www.opennet.ru/man.shtml?topic=getgrgid&category=3&russian=0 - ошибки
+
+HEADER = sys/types.h, attr/xattr.h
+	ssize_t			listxattr(const char *path, char *list, size_t size) - получает список list названий расширенных атрибутов,
+						ассоциированных с заданным путем path в файловой системе. Список является набором названий (заканчивающихся NULL) один за одним.
+						Названия расширенных атрибутов, к которым вызывающий процесс не может иметь доступ, могут быть исключены из списка.
+						Возвращается длина списка list названий атрибутов. 
+
+HEADER = sys/types.h, sys/xattr.h
+	ssize_t			getxattr(const char *path, const char *name, void *value, siae_t size) - возвращает значение расширенного атрибута
+						с именем name и связанного с указанным путем path в файловой системе. Значение атрибута помещается в буфер,
+						указанный в value; в size задаётся размер этого буфера. В качестве возвращаемого значения вызова возвращается
+						количество байт, помещённых в value. 
+http://ru.manpages.org/getxattr/2 - getxattr
+http://ru.manpages.org/xattr/7 - атрибуты
+
+HEADER = time.h
+	time_t			time(time_t *ttime) - считывает текущие показания системных часов CLOCK_REALTIME в секунду, которые возвращаются и
+						помещаются по адресу ttime, если ttime != NULL. Т.о. time - текущее время в секундах (и ttime похоже тоже).
+						Значение системных часов - время в секундах, истекшее с 0 часов 1 января 1970 года ("абсолютное время").
+	char			*ctime(const time_t *time_ptr) - преобразует календарное время в строку формата "Wed Jun 30 21:49:08 1993\n\0".
+						time_ptr - указатель на time_t, который содержит календарное время (например, из функции time()).
+
+HEADER = unistd.h, fcntl.h - макросы (константы)
+	ssize_t			readlink(const char *pathname, char *buf, size_t bufsiz) - помещает содержимое символьной ссылки pathname в буфер buf
+						размером bufsiz, не добавляя в buf байт null. Если буфер слишком мал для хранения содержимого,
+						он урезается до длины bufsiz символов.
+http://ru.manpages.org/readlink/2 - ошибки
+
+HEADER = stdlib.h
+	void			*malloc(size_t sizemem) - возвращает указатель на начало блока выделенной памяти (с неопределенными значениями)
+	void			free(void *ptrmem) - освобождает выделенный раньше блок памяти
+
+HEADER = stdio.h
+	void			perror(const char *string) - интерпретирует значение глобальной переменной ERRNO в строку и выводит ее на
+						стандартный поток вывода (вывода ошибок) с сообщением из параметра string. В ERRNO хранится значение последней (!!!) ошибки,
+						полученной при вызове библиотечных функций. Вывод: "string: errno_string\n". string может быть равным NULL.
+
+HEADER = string.h
+	char			*strerror(int errornum) - интерпретирует номер ошибки в строку, сохраняет ее в памяти, возвращает указатель на сообщение.
+						Перезаписывается при повторном вызове.
+
+HEADER = stdlib.h
+	void			exit(int value) - принято value = 0 в случае успеха. Программа немедленно завершается, как правило (???) выполняя
+						очистку используемой памяти
