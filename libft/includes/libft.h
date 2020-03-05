@@ -6,7 +6,7 @@
 /*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 11:39:08 by btyrande          #+#    #+#             */
-/*   Updated: 2020/02/19 14:36:07 by btyrande         ###   ########.fr       */
+/*   Updated: 2020/03/05 17:05:09 by btyrande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void				*ft_memccpy(void *dst, const void *src,
 void				*ft_memmove(void *dst, const void *src, size_t len);
 void				*ft_memchr(const void *s, int c, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
+
 size_t				ft_strlen(const char *s);
 char				*ft_strdup(const char *s1);
 char				*ft_strcpy(char *dst, const char *src);
@@ -51,7 +52,9 @@ char				*ft_strnstr(const char *haystack, const char *needle,
 					size_t len);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
+
 long long int		ft_atoi(const char *str);
+
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);
 int					ft_isalnum(int c);
@@ -62,6 +65,7 @@ int					ft_tolower(int c);
 
 void				*ft_memalloc(size_t size);
 void				ft_memdel(void **ap);
+
 char				*ft_strnew(size_t size);
 void				ft_strdel(char **as);
 void				ft_strclr(char *s);
@@ -75,7 +79,9 @@ char				*ft_strsub(char const *s, unsigned int start, size_t len);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s);
 char				**ft_strsplit(char const *s, char c);
+
 char				*ft_itoa(int n);
+
 void				ft_putchar(char c);
 void				ft_putstr(char const *s);
 void				ft_putendl(char const *s);
@@ -95,5 +101,7 @@ t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 int					get_next_line(const int fd, char **line);
 int					ft_strchri(char *str, char c);
 size_t				ft_countwords(char const *s, char c);
+
+void				ft_swap_str(char **s1, char **s2);
 
 #endif

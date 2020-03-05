@@ -6,7 +6,7 @@
 #    By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/23 16:25:17 by btyrande          #+#    #+#              #
-#    Updated: 2020/02/27 13:05:05 by btyrande         ###   ########.fr        #
+#    Updated: 2020/03/05 17:05:27 by btyrande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ SRC =	ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
 		ft_strstr.c ft_strsub.c ft_strtrim.c ft_tolower.c ft_toupper.c \
 		get_next_line.c ft_strchri.c ft_countwords.c \
 		ft_printf.c parse_options.c pf_chars.c pf_numbers_signed.c \
-		pf_numbers_unsigned.c pf_numbers_float.c
+		pf_numbers_unsigned.c pf_numbers_float.c ft_swap_str.c
 
 OBJ = $(SRC:.c=.o)
 

@@ -1,36 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strmap.c                                        :+:      :+:    :+:   */
+/*   ft_swap_str.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/10 23:22:50 by btyrande          #+#    #+#             */
-/*   Updated: 2020/02/27 12:56:29 by btyrande         ###   ########.fr       */
+/*   Created: 2020/03/05 17:03:10 by btyrande          #+#    #+#             */
+/*   Updated: 2020/03/05 17:04:15 by btyrande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strmap(char const *s, char (*f)(char))
+void	ft_swap_str(char **s1, char **s2)
 {
-	int		i;
-	char	*str;
+	char *tmp;
 
-	if (!s)
-		return (NULL);
-	i = ft_strlen(s);
-	if ((str = (char*)malloc(sizeof(char) * (i + 1))))
-	{
-		i = 0;
-		while (s[i])
-		{
-			str[i] = f(s[i]);
-			i++;
-		}
-		str[i] = '\0';
-		return (str);
-	}
-	else
-		return (NULL);
+	tmp = *s1;
+	*s1 = *s2;
+	*s2 = tmp;
 }

@@ -1,40 +1,40 @@
 NAME = ft_ls
+CC = gcc
 FLAGS = 
-CC = gcc -g
 
-SRC = ft_ls.c
+SRC = ft_ls.c sort_flags.c
 OBJ = $(addprefix $(OBJDIR), $(SRC:.c=.o))
-INC = $(INCDIR)ft_ls.h $(LIBINC)libft.h
+LIBFT = $(LIBDIR)libft.a
+INC = $(LIBDIR)includes/libft.h $(INCDIR)ft_ls.h
 
 SRCDIR = src/
 OBJDIR = obj/
 INCDIR = inc/
 LIBDIR = libft/
-LIBINC = libft/includes
 
-LIBFT = $(LIBDIR)libft.a
-MKINC = -I $(INCDIR) -I $(LIBINC) -L $(LIBDIR)
+MKINC = -I $(INCDIR) -I $(LIBDIR)includes/
+INCLIB = -L $(LIBDIR) -lft
 
 all: $(OBJDIR) $(LIBFT) $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(MKINC) $^ -o $@
-
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+	$(CC) $(FLAGS) $(MKINC) $(INCLIB) $(OBJ) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INC)
-	$(CC) $(FLAGS) -o $@ -c $^ 
+	$(CC) $(FLAGS) $(MKINC) -c $< -o $@
+
+$(OBJDIR):
+	mkdir -p $@
 
 $(LIBFT):
 	make -C $(LIBDIR)
 
 clean:
-	make -C clean $(LIBDIR)
-	rm -rf $(OBJDIR)
+	@make clean -C $(LIBDIR)
+	@rm -rf $(OBJDIR)
 
 fclean: clean
-	rm -f $(NAME)
-	make -C fclean $(LIBDIR)
+	@make fclean -C $(LIBDIR)
+	@rm -f $(NAME)
 
 re: fclean all
