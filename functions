@@ -36,6 +36,16 @@ struct stat {
     time_t    st_mtime;    /* время последней модификации */
     time_t    st_ctime;    /* время последнего изменения */
 };
+
+ /*
+	struct stat st;
+    if(stat(filename, &st) == 0)
+    {
+      	if(S_ISREG(st.st_mode)) return file_exists;
+        if(S_ISDIR(st.st_mode)) return dir_exists;
+	}
+*/
+http://manpages.ubuntu.com/manpages/precise/ru/man2/stat.2.html
 https://www.opennet.ru/cgi-bin/opennet/man.cgi?topic=lstat - макросы + инфо
 http://ru.manpages.org/stat/2
 

@@ -2,7 +2,7 @@ NAME = ft_ls
 CC = gcc
 FLAGS = 
 
-SRC = ft_ls.c sort_flags.c
+SRC = ft_ls.c sort_flags.c init.c
 OBJ = $(addprefix $(OBJDIR), $(SRC:.c=.o))
 LIBFT = $(LIBDIR)libft.a
 INC = $(LIBDIR)includes/libft.h $(INCDIR)ft_ls.h
