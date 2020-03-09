@@ -12,50 +12,61 @@
 
 #include "ft_ls.h"
 
-t_ls	*sort_no_flag(t_ls *tmp1, t_ls *tmp2, int *flag, int f)
+t_ls	*sort_no_flag(t_ls *tmp, int *flag, int f)
 {
+	struct stat *s;
+
 	(void)f;
-	if (ft_strcmp(tmp1->name, tmp2->name) > 0)
+	s = tmp->stat;
+	if (ft_strcmp(tmp->name, tmp->next->name) > 0)
 	{
-		ft_swap_str(&(tmp1->name), &(tmp2->name));
+		ft_swap_str(&(tmp->name), &(tmp->next->name));
+		tmp->stat = tmp->next->stat;
+		tmp->next->stat = s;
 		*flag = 1;
 	}
-	return (tmp1);
+	return (tmp);
 }
 
-t_ls	*sort_r_flag(t_ls *tmp1, t_ls *tmp2, int *flag, int f)
+t_ls	*sort_r_flag(t_ls *tmp, int *flag, int f)
 {
+	struct stat *s;
+
 	(void)f;
-	if (ft_strcmp(tmp1->name, tmp2->name) < 0)
+	s = tmp->stat;
+	if (ft_strcmp(tmp->name, tmp->next->name) < 0)
 	{
-		ft_swap_str(&(tmp1->name), &(tmp2->name));
+		ft_swap_str(&(tmp->name), &(tmp->next->name));
+		tmp->stat = tmp->next->stat;
+		tmp->next->stat = s;
 		*flag = 1;
 	}
-	return (tmp1);
+	return (tmp);
 }
 
-t_ls	*sort_t_flag(t_ls *tmp1, t_ls *tmp2, int *flag, int f)
+t_ls	*sort_t_flag(t_ls *tmp, int *flag, int f)
 {
 	time_t		time1;
 	time_t		time2;
+	struct stat *s;
 
-	time1 = tmp1->stat->st_mtime;
-	time2 = tmp2->stat->st_mtime;
+	s = tmp->stat;
+	time1 = tmp->stat->st_mtime;
+	time2 = tmp->next->stat->st_mtime;
 	if ((time1 < time2 && f == 0) || (time1 > time2 && f == 1))
 	{
-		ft_swap_str(&(tmp1->name), &(tmp2->name));
+		ft_swap_str(&(tmp->name), &(tmp->next->name));
+		tmp->stat = tmp->next->stat;
+		tmp->next->stat = s;
 		*flag = 1;
 	}
-	return (tmp1);
+	return (tmp);
 }
 
-t_ls	*sorting(t_ls *ls, int a, t_ls *f(t_ls*, t_ls*, int*, int))
+t_ls	*sorting(t_ls *ls, int a, t_ls *f(t_ls*, int*, int))
 {
 	t_ls	*tmp;
 	int		flag;
-
-// можно подать через аргументы имена файлов, которых не существует. в структуре ft_ls это листы с name=NULL
-// нужно придумать, как при сортировке не проходить по файлам с name = NULL - подать второй tmp
 
 	tmp = ls;
 	flag = 1;
@@ -67,7 +78,7 @@ t_ls	*sorting(t_ls *ls, int a, t_ls *f(t_ls*, t_ls*, int*, int))
 		tmp = ls;
 		while (tmp->next != NULL)
 		{
-		//	tmp = f(tmp, &flag, a);
+			tmp = f(tmp, &flag, a);
 			tmp = tmp->next;
 		}
 	}

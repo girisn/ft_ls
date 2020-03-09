@@ -18,7 +18,7 @@ INCLIB = -L $(LIBDIR) -lft
 all: $(OBJDIR) $(LIBFT) $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(MKINC) $(INCLIB) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(MKINC) $(OBJ) $(INCLIB) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INC)
 	$(CC) $(FLAGS) $(MKINC) -c $< -o $@

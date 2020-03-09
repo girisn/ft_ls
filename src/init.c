@@ -33,8 +33,49 @@ int		check_flags(char *str, int flags)
 	return (flags);
 }
 
-t_ls	*list_ls_init(t_ls *t, char *name)
+char	*make_dir_name(char *new_name, char *prev_name)
 {
+	char	*name;
+
+	if (prev_name == NULL)
+		return (new_name);
+	else if (prev_name[ft_strlen(prev_name) - 1] == '/')
+		name = ft_strjoin(prev_name, new_name);
+	else
+	{
+		name = ft_strnew(ft_strlen(prev_name) + ft_strlen(new_name) + 1);
+		name = ft_strcat(name, prev_name);
+		name = ft_strcat(name, "/");
+		name = ft_strcat(name, new_name);
+	}
+	return (name);
+}
+
+struct stat	*list_stat_init(char *name, char *name_dir)
+{
+	struct stat *s;
+	char		*full_name;
+
+	if (!(s = (struct stat*)malloc(sizeof(struct stat))))
+		error_exit(NULL);
+	full_name = make_dir_name(name, name_dir);
+	if ((stat(full_name, s)) == -1)
+	{
+		error(name);
+		(name_dir) ? free(full_name) : 0;
+		free(s);
+		return (NULL);
+	}
+	(name_dir) ? free(full_name) : 0;
+	return (s);
+}
+
+t_ls	*list_ls_init(t_ls *t, char *name, char *path)
+{
+	struct stat		*s;
+
+	if ((s = list_stat_init(name, path)) == NULL)
+		return (t);
 	if (t == NULL)
 	{
 		if (!(t = (t_ls*)malloc(sizeof(t_ls))))
@@ -43,18 +84,15 @@ t_ls	*list_ls_init(t_ls *t, char *name)
 	else
 	{
 		if (!(t->next = (t_ls*)malloc(sizeof(t_ls))))
-			error(NULL);
+			error_exit(NULL);
 		t = t->next;
 	}
 	ft_bzero(t, sizeof(t));
-	t->stat = (struct stat*)malloc(sizeof(struct stat));
+	t->stat = s;
 	t->name = name;
-	if ((stat(name, t->stat)) == -1)
-	{
-		error(name);
-		t->name = NULL;
-	}
+	t->name_dir = path;
 	t->next = NULL;
+	t->down = NULL;
 	return (t);
 }
 
@@ -73,15 +111,15 @@ int		check_input(int argc, char **argv, t_ls **ls)
 		else if (tmp == NULL)
 		{
 			flags |= (!(flags & F_FILE)) ? F_FILE : 0;
-			tmp = list_ls_init(tmp, argv[i]);
+			tmp = list_ls_init(tmp, argv[i], NULL);
 			*ls = tmp;
 		}
 		else
-			tmp = list_ls_init(tmp, argv[i]);
+			tmp = list_ls_init(tmp, argv[i], NULL);
 	return (flags);
 }
 
-t_ls	*init_dir(DIR *dir)
+t_ls	*init_dir(DIR *dir, char *path)
 {
 	struct dirent	*d;
 	t_ls			*tmp;
@@ -93,11 +131,11 @@ t_ls	*init_dir(DIR *dir)
 	{
 		if (tmp == NULL)
 		{
-			tmp = list_ls_init(tmp, d->d_name);
+			tmp = list_ls_init(tmp, d->d_name, path);
 			ls = tmp;
 		}
 		else
-			tmp = list_ls_init(tmp, d->d_name);
+			tmp = list_ls_init(tmp, d->d_name, path);
 		d = readdir(dir);
 	}
 	return (ls);
