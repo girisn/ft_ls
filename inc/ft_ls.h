@@ -30,6 +30,7 @@ typedef struct		s_ls
 	struct s_ls		*next;
 	struct s_ls		*down;
 	struct stat		*stat;
+	int				len;
 }					t_ls;
 
 void				error(char *str);

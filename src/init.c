@@ -6,7 +6,7 @@
 /*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 18:42:19 by btyrande          #+#    #+#             */
-/*   Updated: 2020/03/06 18:48:06 by btyrande         ###   ########.fr       */
+/*   Updated: 2020/03/14 16:06:00 by btyrande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int		check_flags(char *str, int flags)
 			(!(flags & F_R)) ? flags |= F_R : 0;
 		else if (str[i] == 't')
 			(!(flags & F_T)) ? flags |= F_T : 0;
-		else
-			return (ft_printf("usage: ./ft_ls [-Ralrt] [file ...]\n"));
+		else if (str[i] != '1' && str[i] != '-')
+			exit(ft_printf("usage: ./ft_ls [-Ralrt] [file ...]\n"));
 	return (flags);
 }
 
@@ -80,6 +80,7 @@ t_ls	*list_ls_init(t_ls *t, char *name, char *path)
 	{
 		if (!(t = (t_ls*)malloc(sizeof(t_ls))))
 			error(NULL);
+		t->len = 0;
 	}
 	else
 	{
@@ -106,16 +107,20 @@ int		check_input(int argc, char **argv, t_ls **ls)
 	flags = 0;
 	tmp = NULL;
 	while (++i < argc)
-		if (argv[i][0] == '-')
+		if (argv[i][0] == '-' && ft_strlen(argv[i]) > 1)
 			flags = check_flags(argv[i], flags);
 		else if (tmp == NULL)
 		{
 			flags |= (!(flags & F_FILE)) ? F_FILE : 0;
 			tmp = list_ls_init(tmp, argv[i], NULL);
 			*ls = tmp;
+			(*ls)->len++;
 		}
 		else
+		{
 			tmp = list_ls_init(tmp, argv[i], NULL);
+			(*ls)->len++;
+		}
 	return (flags);
 }
 

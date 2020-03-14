@@ -15,10 +15,10 @@ LIBDIR = libft/
 MKINC = -I $(INCDIR) -I $(LIBDIR)includes/
 INCLIB = -L $(LIBDIR) -lft
 
-all: $(OBJDIR) $(LIBFT) $(NAME)
+all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(MKINC) $(OBJ) $(INCLIB) -o $(NAME)
+$(NAME): $(OBJDIR) $(LIBFT) $(OBJ)
+	$(CC) $(FLAGS) $(OBJ) $(INCLIB) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INC)
 	$(CC) $(FLAGS) $(MKINC) -c $< -o $@
