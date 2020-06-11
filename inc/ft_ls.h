@@ -35,16 +35,24 @@ typedef struct		s_ls
 	struct s_ls		*next;
 }					t_ls;
 
-int		ls_error(char *str, int n);
 
+int		check_dots(char *s1, char *s2);
 t_ls	*sort_list(t_ls *ls, int flag);
 
 int		add_new_file(char *path, char *name, t_ls **file);
 
-int		set_options(char *str, int *flags);
+int		ls_error(char *str, int n);
+void	free_list(t_ls **ls);
+
 int		set_flags(int argc, char **argv, int *flags);
 
+int		print_list(t_ls *ls, int args, int flags, int n);
+int		print_basic(t_ls *ls, int flags);
+int		print_table(t_ls *ls, int flags);
 
-int		ft_strcmp_abc(char *s1, char *s2);
+void	ls_type(t_stat *stat);
+void	ls_mode(mode_t mode);
+void	print_time(t_ls *ls);
+short unsigned	block_size(t_ls *ls);
 
 #endif
