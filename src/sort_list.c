@@ -12,9 +12,10 @@
 
 #include "ft_ls.h"
 
-int		ft_strcmp_abc(char *s1, char *s2, int n)
+int		ft_strcmp_abc(char *s1, char *s2)
 {
 	int		i;
+	int		dot;
 
 	i = 0;
 	while (s1[i] && s2[i] && s1[i] == s2[i])
@@ -32,6 +33,38 @@ int		ft_strcmp_abc(char *s1, char *s2, int n)
 	return (-1);
 }
 
+int		check_dots(char *s1, char *s2)
+{
+	int		i;
+	int		j;
+	int		n;
+	char	*t1;
+	char	*t2;
+
+	i = 0;
+	j = 0;
+	if (s1[0] != '.' && s2[0] != '.')
+		return (ft_strcmp_abc(s1, s2));
+	if (!ft_strcmp(s1, ".") && !ft_strcmp(s2, ".."))
+		return (1);
+	if (!ft_strcmp(s2, ".") && !ft_strcmp(s1, ".."))
+		return (-1);
+	while (s1[i] == '.')
+		i++;
+	t1 = s1 + i;
+	while (s2[j] == '.')
+		j++;
+	t2 = s2 + j;
+	if ((n = ft_strcmp_abc(t1, t2)) > 0)
+		return (1);
+	else if (n < 0)
+		return (-1);
+	else if (i == j)
+		return (0);
+	else
+		return ((i > j) ? 1 : -1);
+}
+
 t_ls	*sort_no_flag(t_ls *tmp, int *flag, int f)
 {
 	t_stat	*s;
@@ -40,7 +73,7 @@ t_ls	*sort_no_flag(t_ls *tmp, int *flag, int f)
 	(void)f;
 	s = tmp->stat;
 	p = tmp->path;
-	if (ft_strcmp_abc(tmp->name, tmp->next->name, 0) > 0)
+	if (check_dots(tmp->name, tmp->next->name) > 0)
 	{
 		ft_swap_str(&(tmp->name), &(tmp->next->name));
 		tmp->stat = tmp->next->stat;
@@ -60,7 +93,7 @@ t_ls	*sort_r_flag(t_ls *tmp, int *flag, int f)
 	(void)f;
 	s = tmp->stat;
 	p = tmp->path;
-	if (ft_strcmp_abc(tmp->name, tmp->next->name, 1) < 0)
+	if (check_dots(tmp->name, tmp->next->name) < 0)
 	{
 		ft_swap_str(&(tmp->name), &(tmp->next->name));
 		tmp->stat = tmp->next->stat;
@@ -85,8 +118,8 @@ t_ls	*sort_t_flag(t_ls *tmp, int *flag, int f)
 	time2 = tmp->next->stat->st_mtime;
 	if (((time1 < time2 && f == 0) || (time1 > time2 && f == 1)) ||
 		(time1 == time2 &&
-		(((f == 0 && ft_strcmp_abc(tmp->name, tmp->next->name, 0) > 0))
-		|| (f == 1 && ft_strcmp_abc(tmp->name, tmp->next->name, 1) < 0))))
+		(((f == 0 && check_dots(tmp->name, tmp->next->name) > 0))
+		|| (f == 1 && check_dots(tmp->name, tmp->next->name) < 0))))
 	{
 		ft_swap_str(&(tmp->name), &(tmp->next->name));
 		tmp->stat = tmp->next->stat;

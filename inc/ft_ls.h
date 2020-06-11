@@ -45,6 +45,6 @@ int		set_options(char *str, int *flags);
 int		set_flags(int argc, char **argv, int *flags);
 
 
-int		ft_strcmp_abc(char *s1, char *s2, int n);
+int		ft_strcmp_abc(char *s1, char *s2);
 
 #endif
