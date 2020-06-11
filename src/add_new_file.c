@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add_new_file.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/03/05 18:25:55 by btyrande          #+#    #+#             */
+/*   Updated: 2020/03/06 19:03:32 by btyrande         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 char	*make_path(char *path, char *name)
@@ -17,7 +29,6 @@ char	*make_path(char *path, char *name)
 	while (i < n && *name)
 		full_path[i++] = *name++;
 	full_path[i] = '\0';
-//	ft_printf("fp = %s\n", full_path);
 	return (full_path);
 }
 
