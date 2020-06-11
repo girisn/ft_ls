@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_swap_str.c                                      :+:      :+:    :+:   */
+/*   ft_wcharlen.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsouchet <bsouchet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/05 17:03:10 by btyrande          #+#    #+#             */
-/*   Updated: 2020/03/05 17:04:15 by btyrande         ###   ########.fr       */
+/*   Created: 2017/05/03 22:30:13 by bsouchet          #+#    #+#             */
+/*   Updated: 2017/05/05 23:43:19 by bsouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_swap_str(char **s1, char **s2)
+size_t	ft_wcharlen(unsigned wc)
 {
-	char *tmp;
-
-	tmp = *s1;
-	*s1 = *s2;
-	*s2 = tmp;
+	if (wc < 0x80)
+		return (1);
+	else if (wc < 0x800)
+		return (2);
+	else if (wc < 0x10000)
+		return (3);
+	return (4);
 }

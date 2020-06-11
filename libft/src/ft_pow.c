@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_swap_str.c                                      :+:      :+:    :+:   */
+/*   ft_pow.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsouchet <bsouchet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/05 17:03:10 by btyrande          #+#    #+#             */
-/*   Updated: 2020/03/05 17:04:15 by btyrande         ###   ########.fr       */
+/*   Created: 2017/05/03 22:28:37 by bsouchet          #+#    #+#             */
+/*   Updated: 2017/05/03 22:28:51 by bsouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_swap_str(char **s1, char **s2)
+double	ft_pow(double n, int pow)
 {
-	char *tmp;
-
-	tmp = *s1;
-	*s1 = *s2;
-	*s2 = tmp;
+	return (pow ? n * ft_pow(n, pow - 1) : 1);
 }

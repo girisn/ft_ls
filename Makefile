@@ -1,8 +1,8 @@
 NAME = ft_ls
 CC = gcc
-FLAGS = 
+FLAGS =
 
-SRC = ft_ls.c sort_flags.c init.c
+SRC = main.c init_flags.c sort_list.c add_new_file.c
 OBJ = $(addprefix $(OBJDIR), $(SRC:.c=.o))
 LIBFT = $(LIBDIR)libft.a
 INC = $(LIBDIR)includes/libft.h $(INCDIR)ft_ls.h
@@ -17,8 +17,9 @@ INCLIB = -L $(LIBDIR) -lft
 
 all: $(NAME)
 
-$(NAME): $(OBJDIR) $(LIBFT) $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) $(INCLIB) -o $(NAME)
+$(NAME): $(OBJDIR) $(OBJ)
+	make -C $(LIBDIR)
+	$(CC) $(FLAGS) $(MKINC) $(OBJ) $(INCLIB) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INC)
 	$(CC) $(FLAGS) $(MKINC) -c $< -o $@

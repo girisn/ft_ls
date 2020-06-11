@@ -30,23 +30,23 @@ SRC =	ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
 		ft_printf.c parse_options.c pf_chars.c pf_numbers_signed.c \
 		pf_numbers_unsigned.c pf_numbers_float.c ft_swap_str.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 INC_DIR = includes/
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-all: $(OBJ_DIR) $(NAME)
+all: $(NAME)
 
-%.o: $(SRC_DIR)%.c
-	$(CC) -o $(OBJ_DIR)$@ -c $< -I $(INC_DIR) $(FLAGS)
+$(NAME): $(OBJ_DIR) $(OBJ)
+	ar rc $(NAME) $(OBJ)
+	ranlib $(NAME)
+
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	$(CC) -o $@ -c $< -I $(INC_DIR) $(FLAGS)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
-
-$(NAME): $(OBJ)
-	ar rc $(NAME) $(addprefix $(OBJ_DIR), $(OBJ))
-	ranlib $(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)

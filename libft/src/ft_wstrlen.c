@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_swap_str.c                                      :+:      :+:    :+:   */
+/*   ft_wstrlen.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsouchet <bsouchet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/05 17:03:10 by btyrande          #+#    #+#             */
-/*   Updated: 2020/03/05 17:04:15 by btyrande         ###   ########.fr       */
+/*   Created: 2017/05/03 22:30:20 by bsouchet          #+#    #+#             */
+/*   Updated: 2017/05/03 22:30:20 by bsouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/ft_printf.h"
 
-void	ft_swap_str(char **s1, char **s2)
+size_t		ft_wstrlen(unsigned *s)
 {
-	char *tmp;
+	size_t	len;
 
-	tmp = *s1;
-	*s1 = *s2;
-	*s2 = tmp;
+	len = 0;
+	while (*s != L'\0')
+	{
+		len += ft_wcharlen(*s);
+		++s;
+	}
+	return (len);
 }
