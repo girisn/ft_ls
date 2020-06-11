@@ -174,16 +174,27 @@ void	print_time(t_ls *ls)
 	ft_printf("%.12s ", str);
 }
 
+short unsigned	block_size(t_ls *ls)
+{
+	long int	size;
+
+	size = 0;
+	while (ls)
+	{
+		size += ls->stat->st_blocks;
+		ls = ls->next;
+	}
+	return (size / 2);
+}
+
 int		print_table(t_ls *ls, int flags)
 {
-	int		*n;
+	int			*n;
+	short unsigned	size;
 
 	check_size(ls, &n);
-
-	
-
 	sort_list(ls, flags);
-	ft_printf("total \n");
+	ft_printf("total %hu\n", block_size(ls));
 	while (ls)
 	{
 		ls_type(ls->stat);
@@ -196,6 +207,7 @@ int		print_table(t_ls *ls, int flags)
 		ft_printf("%s\n", ls->name);
 		ls = ls->next;
 	}
+	free(n);
 	return (1);
 }
 
@@ -275,6 +287,7 @@ int		print_list(t_ls *ls, int args, int flags, int n)
 		if ((S_ISDIR(tmp->stat->st_mode) && ft_strcmp(tmp->name, "..")
 				&& ft_strcmp(tmp->name, ".")) || (n && !args))
 		{
+			(flags & F_BR && n && !args) ? ft_printf(".:\n") : 0;
 			print_path(tmp, args, n);
 			ls = read_folder(tmp, flags);
 			if (ls)
