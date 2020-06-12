@@ -18,10 +18,12 @@ int		set_options(char *str, int *flags)
 	int		i;
 
 	i = 0;
+	if (str[0] == '-' && str[1] == '-' && !str[2])
+		return (1);
 	while (str[++i])
 	{
 		if ((n = ft_strchri("alRrt1", str[i])) == -1)
-			ls_error(str + i, 1);
+			ls_error(str + i, 3);
 		*flags |= (1 << n);
 	}
 	return (1);

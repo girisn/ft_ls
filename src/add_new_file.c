@@ -36,6 +36,8 @@ t_ls	*new_file(char *path, char *name, t_stat *stat)
 {
 	t_ls	*file;
 
+	if (!name || !stat)
+		return (NULL);
 	if (!(file = (t_ls*)malloc(sizeof(t_ls)))
 		|| !(file->name = ft_strdup(name))
 		|| !(file->path = make_path(path, name)))
@@ -55,14 +57,9 @@ int		add_new_file(char *path, char *name, t_ls **file)
 	stat = (t_stat*)malloc(sizeof(t_stat));
 	full_name = make_path(path, name);
 	if ((lstat(full_name, stat)) == -1)
-	{
-		ft_printf("ooo\n");
 		return (-1);
-	}
 	if (*file == NULL)
-	{
 		*file = new_file(path, name, stat);
-	}
 	else
 	{
 		while (tmp->next)

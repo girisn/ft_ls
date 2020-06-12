@@ -102,6 +102,8 @@ t_ls	*sorting(t_ls *ls, int a, t_ls *f(t_ls*, int*, int))
 
 t_ls	*sort_list(t_ls *ls, int flag)
 {
+	if (!ls)
+		return (NULL);
 	if (!(flag & F_R) && !(flag & F_T))
 		ls = sorting(ls, 0, sort_no_flag);
 	else if (flag & F_R && !(flag & F_T))

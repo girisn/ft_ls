@@ -16,15 +16,17 @@ int		ls_error(char *str, int n)
 {
 	if (n == 1)
 	{
-		ft_putstr_fd("ft_ls: illegal option -", 2);
+		ft_putstr_fd("ls: illegal option -", 2);
 		ft_putchar_fd(str[0], 2);
 		ft_putendl_fd("\nusage: ft_ls [-alRrt] [file ...]", 2);
 		exit(EXIT_FAILURE);
 	}
 	else // if (n == 0)
 	{
-		ft_putstr_fd("ft_ls: ", 2);
-		perror(str);
+		ft_putstr_fd("ls: cannot access '", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd("': ", 2);
+		perror(NULL);
 	}
 	if (n == 2)
 		exit(EXIT_FAILURE);
@@ -52,7 +54,6 @@ t_ls	*init_list(int count, char **files, int flags)
 	t_ls	*start;
 	int		i;
 
-	(void)flags;
 	i = -1;
 	start = NULL;
 	(!count) ? add_new_file("", ".", &start) : 0;

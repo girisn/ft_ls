@@ -17,7 +17,6 @@
 # include <string.h>
 # include <sys/ioctl.h>
 
-
 # define F_A	1
 # define F_L	2
 # define F_BR	4

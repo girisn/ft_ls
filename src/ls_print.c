@@ -27,7 +27,7 @@ int		print_path(t_ls *ls, int args, int n)
 		ft_printf("\n%s:\n", ls->path);
 	else if (args && args != 1)
 		ft_printf("%s:\n", ls->path);
-	return (1);
+	return (0);
 }
 
 t_ls	*read_folder(t_ls *ls, int flags)
@@ -58,15 +58,14 @@ int		print_list(t_ls *ls, int args, int flags, int n)
 	while (tmp)
 	{
 		if ((S_ISDIR(tmp->stat->st_mode) && ft_strcmp(tmp->name, "..")
-				&& ft_strcmp(tmp->name, ".")) || (n && !args))
+				&& ft_strcmp(tmp->name, ".")) || n)
 		{
 			(flags & F_BR && n && !args) ? ft_printf(".:\n") : 0;
-			print_path(tmp, args, n);
+			n = print_path(tmp, args, n);
 			ls = read_folder(tmp, flags);
 			if (ls)
 			{
 				print_content(ls, flags);
-				n = 0;
 				print_list(ls, args, flags, 0);
 				free_list(&ls);
 			}
