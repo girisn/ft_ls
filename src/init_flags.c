@@ -18,8 +18,6 @@ int		set_options(char *str, int *flags)
 	int		i;
 
 	i = 0;
-	if (str[0] == '-' && str[1] == '-' && !str[2])
-		return (1);
 	while (str[++i])
 	{
 		if ((n = ft_strchri("alRrt1", str[i])) == -1)
@@ -29,14 +27,20 @@ int		set_options(char *str, int *flags)
 	return (1);
 }
 
-int		set_flags(int argc, char **argv, int *flags)
+int		set_flags(int argc, char **argv, int *flags, int *spec)
 {
 	int		i;
 
 	i = 0;
 	*flags = 0;
+	*spec = 0;
 	while (++i < argc && argv[i][0] == '-' && argv[i][1])
 	{
+		if (argv[i][0] == '-' && argv[i][1] == '-' && !argv[i][2])
+		{
+			*spec = 1;
+			return (i + 1);
+		}
 		if (!set_options(argv[i], flags))
 			return (-1);
 	}

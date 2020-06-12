@@ -140,7 +140,7 @@ else
 fi
 rm -rf tests;
 
-mkdir -p tests/level1{1..2}/level2{1..2}/level3{1..2};
+mkdir -p tests/level11/level21/level31;
 touch -t 201212101830.55 tests/lvl1;
 touch -t 201212101830.55 tests/level11/lvl11;
 touch -t 201212101830.55 tests/level11/level21/lvl21;

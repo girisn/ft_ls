@@ -74,7 +74,7 @@ rm -rf tests;
 
 mkdir -p dir1 dir2 dir3;
 chmod 000 dir1;
-./ft_ls -1R 2>&1 | grep -v denied> .result/r1 2>&1;
+./ft_ls -1R 2>&1 | grep -v denied > .result/r1 2>&1;
 ls -1R 2>&1 | grep -v denied > .result/r2 2>&1;
 diff .result/r1 .result/r2 > .result/r3;
 	((nb_test+=1));
@@ -183,32 +183,32 @@ fi
 rm -rf dir;
 rm -rf symdir;
 
-mkdir -p .result;
-echo $cyan"==========\ntime of [ft_ls -R ~/]:"$clear;
-time ./ft_ls -1R ~/ | grep -v "ls:" > .result/r1 2>&1;
-echo $cyan"==========\ntime of [ls -R ~/]:"$clear;
-time ls -1R ~/ | grep -v "ls:" > .result/r2 2>&1;
-echo $cyan"=========="$clear;
-diff .result/r1 .result/r2 > .result/r3;
-	((nb_test+=1));
-if [ -s .result/r3 ]
-then
-	echo $cyan"\n==========\nft_ls:"$clear;
-	cat -e .result/r1;
-	echo $cyan"==========\nls:"$clear;
-	cat -e .result/r2;
-	echo $cyan"=========="$clear;
-	if [ -n $2 ] && [ "$2" = "p" ]
-	then
-		echo "\nDiff:";
-		cat .result/r3;
-		echo "";
-	fi
-	echo $red"Test "$nb_test": [ft_ls -1R ~/]"$pos$cross$clear;
-else
-	((success+=1));
-	echo $green"Test "$nb_test": [ft_ls -1R ~/]"$pos$tick$clear;
-fi
+#mkdir -p .result;
+#echo $cyan"==========\ntime of [ft_ls -R ~/]:"$clear;
+#time ./ft_ls -1R ~/ | grep -v "ls:" > .result/r1 2>&1;
+#echo $cyan"==========\ntime of [ls -R ~/]:"$clear;
+#time ls -1R ~/ | grep -v "ls:" > .result/r2 2>&1;
+#echo $cyan"=========="$clear;
+#diff .result/r1 .result/r2 > .result/r3;
+#	((nb_test+=1));
+#if [ -s .result/r3 ]
+#then
+#	echo $cyan"\n==========\nft_ls:"$clear;
+#	cat -e .result/r1;
+#	echo $cyan"==========\nls:"$clear;
+#	cat -e .result/r2;
+#	echo $cyan"=========="$clear;
+#	if [ -n $2 ] && [ "$2" = "p" ]
+#	then
+#		echo "\nDiff:";
+#		cat .result/r3;
+#		echo "";
+#	fi
+#	echo $red"Test "$nb_test": [ft_ls -1R ~/]"$pos$cross$clear;
+#else
+#	((success+=1));
+#	echo $green"Test "$nb_test": [ft_ls -1R ~/]"$pos$tick$clear;
+#fi
 
 printf $Byellow"\nEnd of option R tests\n"$clear;
 if [ $success -eq $nb_test ]

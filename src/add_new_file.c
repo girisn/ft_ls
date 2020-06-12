@@ -17,14 +17,19 @@ char	*make_path(char *path, char *name)
 	int		n;
 	int		i;
 	char	*full_path;
+	int		tmp;
 
 	n = ft_strlen(name);
+	tmp = 0;
 	(path[0]) ? n += ft_strlen(path) + 1 : 0;
-	full_path = (char*)malloc(sizeof(char) * (n + 1));
+	(n) ? full_path = (char*)malloc(sizeof(char) * (n + 1)) : 0;
 	i = -1;
 	while (path[++i])
+	{
+		(path[i] == '/' && path[i + 1] == '\0') ? tmp = 1 : 0;
 		full_path[i] = path[i];
-	if (i && !(path[0] == '/' && path[1] == '\0'))
+	}
+	if (i > 0 && !(path[0] == '/' && path[1] == '\0') && tmp == 0)
 		full_path[i++] = '/';
 	while (i < n && *name)
 		full_path[i++] = *name++;

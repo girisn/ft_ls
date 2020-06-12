@@ -66,6 +66,21 @@ void	print_str(int len, int n, char *str, long long int num)
 	ft_putchar(' ');
 }
 
+void	print_l_options(t_ls *ls, int *n)
+{
+	ls_type(ls->stat);
+	ls_mode(ls->stat->st_mode);
+	print_str(n[0], 1, NULL, ls->stat->st_nlink);
+	print_str(n[1], 0, getpwuid(ls->stat->st_uid)->pw_name, 0);
+	print_str(n[2], 0, getgrgid(ls->stat->st_gid)->gr_name, 0);
+	print_str(n[3], 1, NULL, ls->stat->st_size);
+	print_time(ls);
+//	if (!S_ISLNK(ls->stat->st_mode))
+		ft_printf("%s\n", ls->name);
+//	else
+//		print_link(ls);
+}
+
 int		print_table(t_ls *ls, int flags)
 {
 	int				*n;
@@ -73,20 +88,10 @@ int		print_table(t_ls *ls, int flags)
 
 	check_size(ls, &n);
 	sort_list(ls, flags);
-	ft_printf("total %hu\n", block_size(ls));
+	
 	while (ls)
 	{
-		ls_type(ls->stat);
-		ls_mode(ls->stat->st_mode);
-		print_str(n[0], 1, NULL, ls->stat->st_nlink);
-		print_str(n[1], 0, getpwuid(ls->stat->st_uid)->pw_name, 0);
-		print_str(n[2], 0, getgrgid(ls->stat->st_gid)->gr_name, 0);
-		print_str(n[3], 1, NULL, ls->stat->st_size);
-		print_time(ls);
-	//	if (!S_ISLNK(ls->stat->st_mode))
-			ft_printf("%s\n", ls->name);
-	//	else
-	//		print_link(ls);
+		print_l_options(ls, n);
 		ls = ls->next;
 	}
 	free(n);

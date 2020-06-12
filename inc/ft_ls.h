@@ -16,6 +16,9 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/ioctl.h>
+//# include <uuid/uuid.h>
+//# include <sys/acl.h>
+# include <limits.h>
 
 # define F_A	1
 # define F_L	2
@@ -43,7 +46,7 @@ int		add_new_file(char *path, char *name, t_ls **file);
 int		ls_error(char *str, int n);
 void	free_list(t_ls **ls);
 
-int		set_flags(int argc, char **argv, int *flags);
+int		set_flags(int argc, char **argv, int *flags, int *spec);
 
 int		print_list(t_ls *ls, int args, int flags, int n);
 int		print_basic(t_ls *ls, int flags);
@@ -53,5 +56,7 @@ void	ls_type(t_stat *stat);
 void	ls_mode(mode_t mode);
 void	print_time(t_ls *ls);
 short unsigned	block_size(t_ls *ls);
+void	print_l_options(t_ls *ls, int *n);
+void	check_size(t_ls *ls, int **n);
 
 #endif
