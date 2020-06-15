@@ -56,6 +56,7 @@ void	print_time(t_ls *ls, int flag)
 	char	*str;
 
 	t = (flag & F_U) ? ls->stat->st_atime : ls->stat->st_mtime;
+	(flag & F_C) ? t = ls->stat->st_ctime : 0;
 	str = ctime(&t) + 4;
 	if (time(&ttime) - t > 15768000 ||
 		t - time(&ttime) >= 3600)

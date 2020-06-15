@@ -29,14 +29,15 @@
 
 
 # define F_A	1
-# define F_D	2
-# define F_F	4
-# define F_L	8
-# define F_BR	16
-# define F_R	32
-# define F_T	64
-# define F_U	128
-# define F_ONE	256
+# define F_C	2
+# define F_D	4
+# define F_F	8
+# define F_L	16
+# define F_BR	32
+# define F_R	64
+# define F_T	128
+# define F_U	256
+# define F_ONE	512
 
 typedef struct stat t_stat;
 

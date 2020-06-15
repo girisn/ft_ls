@@ -62,7 +62,9 @@ t_ls	*sort_t_flag(t_ls *tmp, int flags, int *flag, int f)
 	s = tmp->stat;
 	p = tmp->path;
 	time1 = (flags & F_U) ? tmp->stat->st_atime : tmp->stat->st_mtime;
-	time2 = (flags & F_U) ? tmp->stat->st_atime : tmp->next->stat->st_mtime;
+	(flags & F_C) ? time1 = tmp->stat->st_ctime : 0;
+	time2 = (flags & F_U) ? tmp->next->stat->st_atime : tmp->next->stat->st_mtime;
+	(flags & F_C) ? time2 = tmp->next->stat->st_ctime : 0;
 	if (((time1 < time2 && f == 0) || (time1 > time2 && f == 1)) ||
 		(time1 == time2 &&
 		(((f == 0 && check_dots(tmp->name, tmp->next->name) > 0))
@@ -106,13 +108,13 @@ t_ls	*sort_list(t_ls *ls, int flag)
 		return (NULL);
 	if (flag & F_F)
 		return (ls);
-	if (!(flag & F_R) && !(flag & F_T) && !(flag & F_U))
+	if (!(flag & F_R) && !(flag & F_T))
 		ls = sorting(ls, flag, 0, sort_no_flag);
-	else if (flag & F_R && !(flag & F_T) && ! (flag & F_U))
+	else if (flag & F_R && !(flag & F_T))
 		ls = sorting(ls, flag, 0, sort_r_flag);
-	else if ((flag & F_T || flag & F_U) && !(flag & F_R))
+	else if (flag & F_T && !(flag & F_R))
 		ls = sorting(ls, flag, 0, sort_t_flag);
-	else if ((flag & F_T || flag & F_U) && flag & F_R)
+	else if (flag & F_T && flag & F_R)
 		ls = sorting(ls, flag, 1, sort_t_flag);
 	return (ls);
 }
