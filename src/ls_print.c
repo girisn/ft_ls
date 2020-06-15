@@ -63,13 +63,13 @@ int		print_first(t_ls *ls, int args, int flags, int num)
 		return (num);
 	if (flags & F_L)
 		check_size(ls, &block);
-	if (args)
+	if (args || flags & F_D)
 		while (ls)
 		{
-			if (!S_ISDIR(ls->stat->st_mode))
+			if (!S_ISDIR(ls->stat->st_mode) || flags & F_D)
 			{
 				if (flags & F_L)
-					print_l_options(ls, block);
+					print_l_options(ls, block, flags);
 				else
 					ft_printf("%s\n", ls->name);
 				n = 0;
@@ -88,6 +88,8 @@ int		print_list(t_ls *ls, int args, int flags, int n)
 		return (1);
 	tmp = ls;
 	n = print_first(tmp, args, flags, n);
+	if (flags & F_D)
+		return (1);
 	while (tmp)
 	{
 		if (S_ISDIR(tmp->stat->st_mode) && (n || (ft_strcmp(tmp->name, "..")

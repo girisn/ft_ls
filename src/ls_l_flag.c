@@ -26,34 +26,39 @@ void	ls_type(t_stat *stat)
 		ft_printf("b");
 	else if (S_ISFIFO(stat->st_mode))
 		ft_printf("p");
-	else if (S_ISSOCK(stat->st_mode))
-		ft_printf("s");
+//	else if (__S_IFSOCK & stat->st_mode)
+//		ft_printf("s");
 }
 
-void	ls_mode(mode_t mode)
+void	ls_mode(mode_t mode, int *n)
 {
-	ft_printf("%c", (S_IRUSR & mode) ? 'r' : '-');
-	ft_printf("%c", (S_IWUSR & mode) ? 'w' : '-');
-	(S_ISUID & mode) ? ft_printf("%c", !(S_IXUSR & mode) ? 'S' : 's')
-		: ft_printf("%c", (S_IXUSR & mode) ? 'x' : '-');
-	ft_printf("%c", (S_IRGRP & mode) ? 'r' : '-');
-	ft_printf("%c", (S_IWGRP & mode) ? 'w' : '-');
-	(S_ISGID & mode) ? ft_printf("%c", !(S_IXGRP & mode) ? 'S' : 's')
-		: ft_printf("%c", (S_IXGRP & mode) ? 'x' : '-');
-	ft_printf("%c", (S_IROTH & mode) ? 'r' : '-');
-	ft_printf("%c", (S_IWOTH & mode) ? 'w' : '-');
-//	(S_ISVTX & mode) ? ft_printf("%c ", !(S_IXOTH & mode) ? 'T' : 't') :
-		ft_printf("%c ", (S_IXOTH & mode) ? 'x' : '-');
+	ft_putchar((S_IRUSR & mode) ? 'r' : '-');
+	ft_putchar((S_IWUSR & mode) ? 'w' : '-');
+	(S_ISUID & mode) ? ft_putchar(!(S_IXUSR & mode) ? 'S' : 's')
+		: ft_putchar((S_IXUSR & mode) ? 'x' : '-');
+	ft_putchar((S_IRGRP & mode) ? 'r' : '-');
+	ft_putchar((S_IWGRP & mode) ? 'w' : '-');
+	(S_ISGID & mode) ? ft_putchar(!(S_IXGRP & mode) ? 'S' : 's')
+		: ft_putchar((S_IXGRP & mode) ? 'x' : '-');
+	ft_putchar((S_IROTH & mode) ? 'r' : '-');
+	ft_putchar((S_IWOTH & mode) ? 'w' : '-');
+	((__S_ISVTX) & mode) ? ft_putchar(!(S_IXOTH & mode) ? 'T' : 't') :
+		ft_putchar((S_IXOTH & mode) ? 'x' : '-');
+	if (n[5] == 1)
+		(n[6] == 1) ? ft_putchar('+') : ft_putchar(' ');
+	ft_putchar(' ');
 }
 
-void	print_time(t_ls *ls)
+void	print_time(t_ls *ls, int flag)
 {
 	time_t	ttime;
+	time_t	t;
 	char	*str;
 
-	str = ctime(&(ls->stat->st_mtime)) + 4;
-	if (time(&ttime) - ls->stat->st_mtime > 15768000 ||
-		ls->stat->st_mtime - time(&ttime) > 3600)
+	t = (flag & F_U) ? ls->stat->st_atime : ls->stat->st_mtime;
+	str = ctime(&t) + 4;
+	if (time(&ttime) - t > 15768000 ||
+		t - time(&ttime) >= 3600)
 	{
 		ft_printf("%.7s", str);
 		ft_printf(" %.4s ", str + 16);

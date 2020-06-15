@@ -149,6 +149,8 @@ touch -t 201212101830.55 tests/level11/level21/level31/lvl21;
 ls -1tR > .result/r2 2>&1;
 diff .result/r1 .result/r2 > .result/r3;
 	((nb_test+=1));
+stat tests;
+stat ft_ls;
 if [ -s .result/r3 ]
 then
 	echo $cyan"\n==========\nft_ls:"$clear;

@@ -212,8 +212,10 @@ rm -rf file1;
 rm -rf file2;
 rm -rf file3;
 
-./ft_ls -lr /dev | grep -v "ls:" | grep -v "dtrace" | grep -v "io8log" | grep -v "io8logtemp" > .result/r1 2>&1;
-ls -lr /dev | grep -v "ls:" | grep -v "dtrace" | grep -v "io8log" | grep -v "io8logtemp" > .result/r2 2>&1;
+#./ft_ls -lr /dev | grep -v "ls:" | grep -v "dtrace" | grep -v "io8log" | grep -v "io8logtemp" > .result/r1 2>&1;
+#ls -lr /dev | grep -v "ls:" | grep -v "dtrace" | grep -v "io8log" | grep -v "io8logtemp" > .result/r2 2>&1;
+./ft_ls -l /dev | grep -v "loop-control" > .result/r1 2>&1
+ls -l /dev | grep -v "loop-control" > .result/r2 2>&1
 diff .result/r1 .result/r2 > .result/r3;
 	((nb_test+=1));
 if [ -s .result/r3 ]

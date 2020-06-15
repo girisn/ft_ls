@@ -1,6 +1,10 @@
 #ifndef FT_LS_H
 #define FT_LS_H
 
+#define _GNU_SOURCE
+
+#include <sys/param.h>
+
 # include "libft.h"
 
 # include <unistd.h>
@@ -17,15 +21,22 @@
 # include <string.h>
 # include <sys/ioctl.h>
 //# include <uuid/uuid.h>
-//# include <sys/acl.h>
+# include <sys/acl.h>
 # include <limits.h>
+# include <sys/sysmacros.h>
+# include <acl/libacl.h>
+# include <errno.h>
+
 
 # define F_A	1
-# define F_L	2
-# define F_BR	4
-# define F_R	8
-# define F_T	16
-# define F_ONE	32
+# define F_D	2
+# define F_F	4
+# define F_L	8
+# define F_BR	16
+# define F_R	32
+# define F_T	64
+# define F_U	128
+# define F_ONE	256
 
 typedef struct stat t_stat;
 
@@ -53,10 +64,10 @@ int		print_basic(t_ls *ls, int flags);
 int		print_table(t_ls *ls, int flags);
 
 void	ls_type(t_stat *stat);
-void	ls_mode(mode_t mode);
-void	print_time(t_ls *ls);
+void	ls_mode(mode_t mode, int *n);
+void	print_time(t_ls *ls, int flag);
 short unsigned	block_size(t_ls *ls);
-void	print_l_options(t_ls *ls, int *n);
+void	print_l_options(t_ls *ls, int *n, int flag);
 void	check_size(t_ls *ls, int **n);
 
 #endif

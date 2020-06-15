@@ -15,12 +15,13 @@ LIBDIR = libft/
 
 MKINC = -I $(INCDIR) -I $(LIBDIR)includes/
 INCLIB = -L $(LIBDIR) -lft
+INCACL = /usr/lib/libacl.a
 
 all: $(NAME)
 
 $(NAME): $(OBJDIR) $(OBJ)
 	make -C $(LIBDIR)
-	$(CC) $(FLAGS) $(MKINC) $(OBJ) $(INCLIB) -o $(NAME)
+	$(CC) $(FLAGS) $(MKINC) $(OBJ) $(INCLIB) $(INCACL) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INC)
 	$(CC) $(FLAGS) $(MKINC) -c $< -o $@

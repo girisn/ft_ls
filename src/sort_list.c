@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-t_ls	*sort_no_flag(t_ls *tmp, int *flag, int f)
+t_ls	*sort_no_flag(t_ls *tmp, int flags, int *flag, int f)
 {
 	t_stat	*s;
 	char	*p;
@@ -32,7 +32,7 @@ t_ls	*sort_no_flag(t_ls *tmp, int *flag, int f)
 	return (tmp);
 }
 
-t_ls	*sort_r_flag(t_ls *tmp, int *flag, int f)
+t_ls	*sort_r_flag(t_ls *tmp, int flags, int *flag, int f)
 {
 	t_stat	*s;
 	char	*p;
@@ -52,7 +52,7 @@ t_ls	*sort_r_flag(t_ls *tmp, int *flag, int f)
 	return (tmp);
 }
 
-t_ls	*sort_t_flag(t_ls *tmp, int *flag, int f)
+t_ls	*sort_t_flag(t_ls *tmp, int flags, int *flag, int f)
 {
 	time_t		time1;
 	time_t		time2;
@@ -61,8 +61,8 @@ t_ls	*sort_t_flag(t_ls *tmp, int *flag, int f)
 
 	s = tmp->stat;
 	p = tmp->path;
-	time1 = tmp->stat->st_mtime;
-	time2 = tmp->next->stat->st_mtime;
+	time1 = (flags & F_U) ? tmp->stat->st_atime : tmp->stat->st_mtime;
+	time2 = (flags & F_U) ? tmp->stat->st_atime : tmp->next->stat->st_mtime;
 	if (((time1 < time2 && f == 0) || (time1 > time2 && f == 1)) ||
 		(time1 == time2 &&
 		(((f == 0 && check_dots(tmp->name, tmp->next->name) > 0))
@@ -78,7 +78,7 @@ t_ls	*sort_t_flag(t_ls *tmp, int *flag, int f)
 	return (tmp);
 }
 
-t_ls	*sorting(t_ls *ls, int a, t_ls *f(t_ls*, int*, int))
+t_ls	*sorting(t_ls *ls, int flags, int a, t_ls *f(t_ls*, int, int*, int))
 {
 	t_ls	*tmp;
 	int		flag;
@@ -93,7 +93,7 @@ t_ls	*sorting(t_ls *ls, int a, t_ls *f(t_ls*, int*, int))
 		tmp = ls;
 		while (tmp->next != NULL)
 		{
-			tmp = f(tmp, &flag, a);
+			tmp = f(tmp, flags, &flag, a);
 			tmp = tmp->next;
 		}
 	}
@@ -104,13 +104,15 @@ t_ls	*sort_list(t_ls *ls, int flag)
 {
 	if (!ls)
 		return (NULL);
-	if (!(flag & F_R) && !(flag & F_T))
-		ls = sorting(ls, 0, sort_no_flag);
-	else if (flag & F_R && !(flag & F_T))
-		ls = sorting(ls, 0, sort_r_flag);
-	else if (flag & F_T && !(flag & F_R))
-		ls = sorting(ls, 0, sort_t_flag);
-	else if (flag & F_T && flag & F_R)
-		ls = sorting(ls, 1, sort_t_flag);
+	if (flag & F_F)
+		return (ls);
+	if (!(flag & F_R) && !(flag & F_T) && !(flag & F_U))
+		ls = sorting(ls, flag, 0, sort_no_flag);
+	else if (flag & F_R && !(flag & F_T) && ! (flag & F_U))
+		ls = sorting(ls, flag, 0, sort_r_flag);
+	else if ((flag & F_T || flag & F_U) && !(flag & F_R))
+		ls = sorting(ls, flag, 0, sort_t_flag);
+	else if ((flag & F_T || flag & F_U) && flag & F_R)
+		ls = sorting(ls, flag, 1, sort_t_flag);
 	return (ls);
 }

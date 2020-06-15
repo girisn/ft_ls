@@ -20,8 +20,12 @@ int		set_options(char *str, int *flags)
 	i = 0;
 	while (str[++i])
 	{
-		if ((n = ft_strchri("alRrt1", str[i])) == -1)
+		if ((n = ft_strchri("adflRrtu1", str[i])) == -1)
 			ls_error(str + i, 3);
+		if (*flags & F_L && str[i] == 'f')
+			*flags &= !F_L;
+		if (str[i] == 'f')
+			*flags |= F_A;
 		*flags |= (1 << n);
 	}
 	return (1);
