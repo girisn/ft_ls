@@ -45,7 +45,8 @@ int		print_basic(t_ls *ls, int flags)
 //	if (flags & F_ONE)
 		while (ls)
 		{
-			ft_printf("%s\n", ls->name);
+			(flags & F_BG) ? ft_printf("%s%s%s\n", ls->color, ls->name, C_NO)
+				: ft_printf("%s\n", ls->name);
 			ls = ls->next;
 		}
 /*	else

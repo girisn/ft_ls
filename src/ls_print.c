@@ -23,6 +23,11 @@ int		print_content(t_ls *ls, int flags)
 
 int		print_path(t_ls *ls, int args, int n, int flags)
 {
+	if (flags & F_BR && n && !args)
+	{
+		ft_printf(".:\n");
+		return (0);
+	}
 	if (!n)
 		ft_printf("\n%s:\n", ls->path);
 	else if ((args && args != 1) || (flags & F_A && flags & F_BR) ||
@@ -47,7 +52,7 @@ t_ls	*read_folder(t_ls *ls, int flags, int *perm)
 	}
 	while ((dir = readdir(folder)))
 		if (dir->d_name[0] != '.' || flags & F_A)
-			add_new_file(ls->path, dir->d_name, &tmp);
+			add_new_file(ls->path, dir->d_name, &tmp, 0, flags);
 	if (folder)
 		closedir(folder);
 	return (tmp);
@@ -56,6 +61,7 @@ t_ls	*read_folder(t_ls *ls, int flags, int *perm)
 int		print_first(t_ls *ls, int args, int flags, int num)
 {
 	int		n;
+	t_stat	*s;
 	int		*block;
 
 	n = num;
@@ -76,34 +82,35 @@ int		print_first(t_ls *ls, int args, int flags, int num)
 			}
 			ls = ls->next;
 		}
+	if (flags & F_L)
+		free(block);
 	return (n);
 }
 
-int		print_list(t_ls *ls, int args, int flags, int n)
+int		print_list(t_ls *ls, int args, int fl, int n)
 {
 	t_ls	*tmp;
 	int		perm;
 
-	if (ls == NULL || (!(flags & F_BR) && n != 1))
+	if (ls == NULL || (!(fl & F_BR) && n != 1))
 		return (1);
 	tmp = ls;
-	n = print_first(tmp, args, flags, n);
-	if (flags & F_D)
+	n = print_first(tmp, args, fl, n);
+	if (fl & F_D)
 		return (1);
 	while (tmp)
 	{
-		if (S_ISDIR(tmp->stat->st_mode) && (n || (ft_strcmp(tmp->name, "..")
-			&& ft_strcmp(tmp->name, "."))))
+		if ((S_ISDIR(tmp->stat->st_mode) && (n || (ft_strcmp(tmp->name, "..")
+			&& ft_strcmp(tmp->name, ".")) || tmp->n == 1)))
 		{
-			(flags & F_BR && n && !args) ? ft_printf(".:\n") : 0;
-			ls = read_folder(tmp, flags, &perm);
-			n = (perm) ? print_path(tmp, args, n, flags) : 0;
-			(flags & F_L && perm) ? ft_printf("total %hu\n", block_size(ls)) : 0;
+			ls = read_folder(tmp, fl, &perm);
+			n = (perm) ? print_path(tmp, args, n, fl) : 0;
+			(fl & F_L && perm) ? ft_printf("total %lu\n", block_size(ls)) : 0;
 			if (ls)
 			{
-				sort_list(ls, flags);
-				print_content(ls, flags);
-				print_list(ls, args, flags, 0);
+				sort_list(ls, fl);
+				print_content(ls, fl);
+				print_list(ls, args, fl, 0);
 				free_list(&ls);
 			}
 		}

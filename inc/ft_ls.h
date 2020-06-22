@@ -2,6 +2,7 @@
 #define FT_LS_H
 
 #define _GNU_SOURCE
+#define STAT_HAVE_NSEC 1
 
 #include <sys/param.h>
 
@@ -32,12 +33,15 @@
 # define F_C	2
 # define F_D	4
 # define F_F	8
-# define F_L	16
+# define F_BG	16
+# define F_L	32
 # define F_R	64
-# define F_BR	32
-# define F_T	128
-# define F_U	256
-# define F_ONE	512
+# define F_BR	128
+# define F_T	256
+# define F_U	512
+# define F_ONE	1024
+
+# define C_NO	"\x1b[0m"
 
 typedef struct stat t_stat;
 
@@ -46,14 +50,16 @@ typedef struct		s_ls
 	char			*name;
 	char			*path;
 	t_stat			*stat;
+	char			*color;
 	struct s_ls		*next;
+	int				n;
 }					t_ls;
 
 
 int		check_dots(char *s1, char *s2);
 t_ls	*sort_list(t_ls *ls, int flag);
 
-int		add_new_file(char *path, char *name, t_ls **file);
+int		add_new_file(char *path, char *name, t_ls **file, int n, int flags);
 
 int		ls_error(char *str, int n);
 void	free_list(t_ls **ls);
@@ -67,8 +73,11 @@ int		print_table(t_ls *ls, int flags);
 void	ls_type(t_stat *stat);
 void	ls_mode(mode_t mode, int *n);
 void	print_time(t_ls *ls, int flag);
-short unsigned	block_size(t_ls *ls);
+long unsigned	block_size(t_ls *ls);
 void	print_l_options(t_ls *ls, int *n, int flag);
-void	check_size(t_ls *ls, int **n);
+int		check_size(t_ls *ls, int **n);
+
+char	*make_color(mode_t mode);
+int		ft_strcmp_abc(char *s1, char *s2, int n, int m);
 
 #endif

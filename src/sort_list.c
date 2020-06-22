@@ -27,6 +27,7 @@ t_ls	*sort_no_flag(t_ls *tmp, int flags, int *flag, int f)
 		tmp->next->stat = s;
 		tmp->path = tmp->next->path;
 		tmp->next->path = p;
+		ft_swap_str(&(tmp->color), &(tmp->next->color));
 		*flag = 1;
 	}
 	return (tmp);
@@ -47,6 +48,7 @@ t_ls	*sort_r_flag(t_ls *tmp, int flags, int *flag, int f)
 		tmp->next->stat = s;
 		tmp->path = tmp->next->path;
 		tmp->next->path = p;
+		ft_swap_str(&(tmp->color), &(tmp->next->color));
 		*flag = 1;
 	}
 	return (tmp);
@@ -57,24 +59,29 @@ t_ls	*sort_t_flag(t_ls *tmp, int flags, int *flag, int f)
 	time_t		time1;
 	time_t		time2;
 	t_stat		*s;
-	char		*p;
+	unsigned long long int		t1;
+	unsigned long long int		t2;
 
 	s = tmp->stat;
-	p = tmp->path;
 	time1 = (flags & F_U) ? tmp->stat->st_atime : tmp->stat->st_mtime;
 	(flags & F_C) ? time1 = tmp->stat->st_ctime : 0;
 	time2 = (flags & F_U) ? tmp->next->stat->st_atime : tmp->next->stat->st_mtime;
 	(flags & F_C) ? time2 = tmp->next->stat->st_ctime : 0;
+	t1 = (flags & F_U) ? tmp->stat->st_atim.tv_nsec : tmp->stat->st_mtim.tv_nsec;
+	(flags & F_C) ? t1 = tmp->stat->st_ctim.tv_nsec : 0;
+	t2 = (flags & F_U) ? tmp->next->stat->st_atim.tv_nsec : tmp->next->stat->st_mtim.tv_nsec;
+	(flags & F_C) ? t2 = tmp->next->stat->st_ctim.tv_nsec : 0;
 	if (((time1 < time2 && f == 0) || (time1 > time2 && f == 1)) ||
-		(time1 == time2 &&
-		(((f == 0 && check_dots(tmp->name, tmp->next->name) > 0))
+		(time1 == time2 && t1 > t2 && f == 1) || (time1 == time2 && t1 < t2 && f == 0)
+		|| (time1 == time2 && t1 == t2 &&
+		((f == 0 && check_dots(tmp->name, tmp->next->name) > 0)
 		|| (f == 1 && check_dots(tmp->name, tmp->next->name) < 0))))
 	{
 		ft_swap_str(&(tmp->name), &(tmp->next->name));
 		tmp->stat = tmp->next->stat;
 		tmp->next->stat = s;
-		tmp->path = tmp->next->path;
-		tmp->next->path = p;
+		ft_swap_str(&(tmp->color), &(tmp->next->color));
+		ft_swap_str(&(tmp->path), &(tmp->next->path));
 		*flag = 1;
 	}
 	return (tmp);

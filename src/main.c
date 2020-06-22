@@ -21,7 +21,19 @@ int		ls_error(char *str, int n)
 		ft_putendl_fd("\nusage: ft_ls [-alRrt] [file ...]", 2);
 		exit(EXIT_FAILURE);
 	}
-	else // if (n == 0)
+	else if (n == 3)
+	{
+		ft_putstr_fd("ls: invalid option -- '", 2);
+		ft_putchar_fd(str[0], 2);
+		ft_putstr_fd("'\nTry 'ls --help' for more information.\n", 2);
+		exit(EXIT_SUCCESS);
+	}
+	else if (n == -1)
+	{
+		perror(NULL);
+		exit(EXIT_FAILURE);
+	}
+	else
 	{
 		(n == 2) ? ft_putstr_fd("ls: cannot open directory '", 2) :
 			ft_putstr_fd("ls: cannot access '", 2);
@@ -29,8 +41,6 @@ int		ls_error(char *str, int n)
 		ft_putstr_fd("': ", 2);
 		(n == 4) ? ft_putstr_fd("No such file or directory\n", 2) : perror(NULL);
 	}
-//	if (n == 2)
-//		exit(EXIT_FAILURE);
 	return (0);
 }
 
@@ -44,26 +54,41 @@ void	free_list(t_ls **ls)
 		free((*ls)->name);
 		free((*ls)->path);
 		free((*ls)->stat);
+		free((*ls)->color);
 		(*ls)->next = NULL;
 		free(*ls);
 		*ls = tmp;
 	}
 }
 
-t_ls	*init_list(int count, char **files, int flags, int spec)
+t_ls	*init_list(int count, int argc, char **files, int flags)
 {
 	t_ls	*start;
 	int		i;
+	int		spec;
 
-	i = -1;
+	i = 0;
+	spec = 0;
 	start = NULL;
-	(!count) ? add_new_file("", ".", &start) : 0;
-	while (++i < count)
-	{
-		if (spec == 0 && !ft_strcmp(files[i], "--"))
-			spec = 1;
-		else if ((add_new_file("", files[i], &start)) == -1)
+	if (!count)
+		if (!(add_new_file("", ".", &start, 1, flags)))
 			ls_error(files[i], 0);
+	while (++i < argc)
+	{
+		if (files[i][0] == '\0')
+			ls_error("\0", 4);
+		else if (files[i][0] == '-' && !files[i][1])
+		{
+			if (!(add_new_file("", files[i], &start, 1, flags)))
+				ls_error(files[i], 0);
+		}
+		else if (spec == 0 && files[i][0] == '-' && files[i][1] == '-' && !files[i][2])
+			spec = 1;
+		else if ((spec == 0 && files[i][0] != '-') || spec == 1)
+		{
+			if (!(add_new_file("", files[i], &start, 1, flags)))
+				ls_error(files[i], 0);
+		}
 	}
 	sort_list(start, flags);
 	return (start);
@@ -77,12 +102,14 @@ int		main(int argc, char **argv)
 	int		args;
 	t_ls	*ls;
 
+	ls = NULL;
+//	ft_printf("a.zip = *.zip - %d\n", ft_strlen(ft_strstr("abcszip", ".zip")) == 6);
 	if ((i = set_flags(argc, argv, &flags, &spec)) == -1)
 		return (1);
-	argc -= i;
-	argv += i;
-	args = (argv[0] == NULL) ? 0 : argc;
-	ls = init_list(argc, argv, flags, spec);
+	args = (spec) ? argc - i - 2 : argc - i - 1;
+	ls = init_list(args, argc, argv, flags);
 	print_list(ls, args, flags, 1);
+	if (ls)
+		free_list(&ls);
 	return (0);
 }

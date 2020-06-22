@@ -10,6 +10,7 @@ cross="\xE2\x9D\x8C"
 tick="\xE2\x9C\x94"
 success=0;
 nb_test=0;
+nb=0;
 
 if [ -z $1 ]
 then
@@ -21,12 +22,17 @@ fi
 cp $1 ./;
 
 mkdir -p result;
-echo "=========================== mix tests ===========================\n";
-<<'comment'
-./ft_ls -lR /usr/bin 2>&1 | grep -v "ls:" | grep -v "treereg" > result/r1 2>&1;
-ls -lR /usr/bin 2>&1 | grep -v "ls:" | grep -v "treereg" > result/r2 2>&1;
+
+
+nb_test=0;
+test_name="42_bonus_opt_c"
+echo "=========================== "$test_name" ===========================\n";
+###1
+./ft_ls -1tc /usr/share 2>&1 > result/r1 2>&1;
+ls -1tc /usr/share 2>&1 > result/r2 2>&1;
 diff result/r1 result/r2 > result/r3;
-	((nb_test+=1))
+	nb_test=$(($nb_test+1))
+	nb=$(($nb+1))
 if [ -s result/r3 ]
 then
 	echo $cyan"\n==========\nft_ls:"$clear;
@@ -38,18 +44,19 @@ then
 		echo "\nDiff:";
 		cat result/r3;
 		echo "";
-	fi
-	echo $red"Test "$nb_test": [ft_ls -lR /usr/bin]"$pos$cross$clear;
+	fi 	
+	echo $red"Test "$nb_test": ls -1tc /usr/share with ''"$clear;
 else
-	((success+=1));
-	echo $green"Test "$nb_test": [ft_ls -lR /usr/bin]"$pos$pos$tick$clear;
+	success=$(($success+1))
+	echo $green"Test "$nb_test": ls -1tc /usr/share with ''"$clear;
 fi
-comment
 
-./ft_ls -lt /usr > result/r1 2>&1;
-ls -lt /usr > result/r2 2>&1;
+###2
+./ft_ls -1tcr /usr/share 2>&1 > result/r1 2>&1;
+ls -1tcr /usr/share 2>&1 > result/r2 2>&1;
 diff result/r1 result/r2 > result/r3;
-	((nb_test+=1))
+	nb_test=$(($nb_test+1))
+	nb=$(($nb+1))
 if [ -s result/r3 ]
 then
 	echo $cyan"\n==========\nft_ls:"$clear;
@@ -61,19 +68,19 @@ then
 		echo "\nDiff:";
 		cat result/r3;
 		echo "";
-	fi
-	echo $red"Test "$nb_test": [ft_ls -lt /usr]"$pos$cross$clear;
+	fi 	
+	echo $red"Test "$nb_test": ls -1tcr /usr/share with ''"$clear;
 else
-	((success+=1));
-	echo $green"Test "$nb_test": [ft_ls -lt /usr]"$pos$pos$tick$clear;
+	success=$(($success+1))
+	echo $green"Test "$nb_test": ls -1tcr /usr/share with ''"$clear;
 fi
 
-mkdir tests;
-touch tests/files{0..1000};
-./ft_ls -l tests > result/r1 2>&1;
-ls -l tests > result/r2 2>&1;
+###3
+./ft_ls -1ltc /usr/share 2>&1 > result/r1 2>&1;
+ls -1ltc /usr/share 2>&1 > result/r2 2>&1;
 diff result/r1 result/r2 > result/r3;
-	((nb_test+=1))
+	nb_test=$(($nb_test+1))
+	nb=$(($nb+1))
 if [ -s result/r3 ]
 then
 	echo $cyan"\n==========\nft_ls:"$clear;
@@ -85,18 +92,19 @@ then
 		echo "\nDiff:";
 		cat result/r3;
 		echo "";
-	fi
-	echo $red"Test "$nb_test": [ft_ls -l] with many files"$pos$cross$clear;
+	fi 	
+	echo $red"Test "$nb_test": ls -1ltc /usr/share with ''"$clear;
 else
-	((success+=1));
-	echo $green"Test "$nb_test": [ft_ls -l] with many files"$pos$pos$tick$clear;
+	success=$(($success+1))
+	echo $green"Test "$nb_test": ls -1ltc /usr/share with ''"$clear;
 fi
-rm -rf tests;
 
-./ft_ls -l /var/ | grep -v "@" > result/r1 2>&1;
-ls -l /var/ | grep -v "@" > result/r2 2>&1;
+###4
+./ft_ls -1lcr /usr/share 2>&1 > result/r1 2>&1;
+ls -1lcr /usr/share 2>&1 > result/r2 2>&1;
 diff result/r1 result/r2 > result/r3;
-	((nb_test+=1))
+	nb_test=$(($nb_test+1))
+	nb=$(($nb+1))
 if [ -s result/r3 ]
 then
 	echo $cyan"\n==========\nft_ls:"$clear;
@@ -108,21 +116,19 @@ then
 		echo "\nDiff:";
 		cat result/r3;
 		echo "";
-	fi
-	echo $red"Test "$nb_test": [ft_ls -l /var/run/]"$pos$cross$clear;
+	fi 	
+	echo $red"Test "$nb_test": ls -1lcr /usr/share with ''"$clear;
 else
-	((success+=1));
-	echo $green"Test "$nb_test": [ft_ls -l /var/run/]"$pos$pos$tick$clear;
+	success=$(($success+1))
+	echo $green"Test "$nb_test": ls -1lcr /usr/share with ''"$clear;
 fi
-rm -rf tests/file*;
-rm -rf tests;
 
-mkdir -p level1/level2/level3/level4;
-touch level1/level2/file{1..5};
-./ft_ls -1 level1/../level1/level2/././level3/level4/./../../ > result/r1 2>&1;
-ls -1 level1/../level1/level2/././level3/level4/./../../ > result/r2 2>&1;
+###5
+./ft_ls -1lc /usr/share 2>&1 > result/r1 2>&1;
+ls -1lc /usr/share 2>&1 > result/r2 2>&1;
 diff result/r1 result/r2 > result/r3;
-	((nb_test+=1))
+	nb_test=$(($nb_test+1))
+	nb=$(($nb+1))
 if [ -s result/r3 ]
 then
 	echo $cyan"\n==========\nft_ls:"$clear;
@@ -134,22 +140,22 @@ then
 		echo "\nDiff:";
 		cat result/r3;
 		echo "";
-	fi
-	echo $red"Test "$nb_test": Path with ./ and ../ "$pos$cross$clear;
+	fi 	
+	echo $red"Test "$nb_test": ls -1lc /usr/share with ''"$clear;
 else
-	((success+=1));
-	echo $green"Test "$nb_test": Path with ./ and ../ "$pos$pos$tick$clear;
+	success=$(($success+1))
+	echo $green"Test "$nb_test": ls -1lc /usr/share with ''"$clear;
 fi
-rm -rf level1;
-rm -rf tests;
 
-printf $Byellow"\nEnd of mix tests\n"$clear;
-if [ $success -eq $nb_test ]
+
+
+printf $Byellow"\nEnd of "$test_name" tests\n"$clear;
+if [ $success -eq $nb ]
 then
 	echo $green"Congratulation ! You passed all the tests."$clear;
 else
 	printf $cyan"%d test succeed, " "$success";
-	((success=$nb_test-$success));
+	success=$(($nb-$success));
 	printf "%d test failed\n"$clear "$success";
 fi
 rm -rf result;

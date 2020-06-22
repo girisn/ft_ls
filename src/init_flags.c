@@ -12,13 +12,15 @@
 
 #include "ft_ls.h"
 
-void	print_usage()
+void	print_usage(void)
 {
 	ft_printf("Usage: ./ft_ls [OPTION] [FILES]\n");
 	ft_printf("  -a\tdo not ignore entries starting with .\n");
-	ft_printf("  -c\tshow ctime (time of last modification of file status information)\n");
+	ft_printf("  -c\tshow ctime (time of last modification ");
+	ft_printf("of file status information)\n");
 	ft_printf("  -d\tlist directories themselves, not their contents\n");
 	ft_printf("  -f\tdo not sort, enable -a, disable -l\n");
+	ft_printf("  -G\tadd colors\n");
 	ft_printf("  -l\tuse a long listing format\n");
 	ft_printf("  -r\treverse order while sorting\n");
 	ft_printf("  -R\tlist subdirectories recursively\n");
@@ -34,8 +36,11 @@ int		set_options(char *str, int *flags)
 	i = 0;
 	while (str[++i])
 	{
-		if ((n = ft_strchri("acdflrRtu1", str[i])) == -1)
+		if ((n = ft_strchri("acdfGlrRtu1", str[i])) == -1)
+		{
 			ls_error(str + i, 3);
+			return (0);
+		}
 		if (*flags & F_L && str[i] == 'f')
 			*flags &= !F_L;
 		if (str[i] == 'f')
@@ -48,24 +53,31 @@ int		set_options(char *str, int *flags)
 int		set_flags(int argc, char **argv, int *flags, int *spec)
 {
 	int		i;
+	int		n;
+	int		option;
 
 	i = 0;
+	n = 0;
 	*flags = 0;
 	*spec = 0;
-	while (++i < argc && argv[i][0] == '-' && argv[i][1])
+	while (++i < argc)
 	{
-		if (!ft_strcmp(argv[i], "--help"))
+		if (*spec == 0 && !ft_strcmp(argv[i], "--help"))
 		{
 			print_usage();
 			return (-1);
 		}
-		if (argv[i][0] == '-' && argv[i][1] == '-' && !argv[i][2])
+		else if (argv[i][0] == '-' && argv[i][1] == '-' && !argv[i][2])
 		{
 			*spec = 1;
-			return (i + 1);
+			return (n);
 		}
-		if (!set_options(argv[i], flags))
-			return (-1);
+		else if (argv[i][0] == '-' && argv[i][1])
+		{
+			if (!set_options(argv[i], flags))
+				return (-1);
+			n++;
+		}
 	}
-	return (i);
+	return (n);
 }
