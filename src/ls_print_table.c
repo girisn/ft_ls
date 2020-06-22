@@ -97,6 +97,7 @@ void	print_name(t_ls *ls, int flags)
 	char	*color;
 	t_stat	*st;
 
+	color = NULL;
 	if (!S_ISLNK(ls->stat->st_mode))
 		(flags & F_BG) ? ft_printf("%s%s%s\n", ls->color, ls->name, C_NO)
 			: ft_printf("%s\n", ls->name);
@@ -107,18 +108,22 @@ void	print_name(t_ls *ls, int flags)
 		st = (t_stat*)malloc(sizeof(t_stat));
 		if ((stat(buf, st)) == -1)
 		{
-			color = ft_strdup("\x1b[01;40;31m");
-			free(ls->color);
-			ls->color = ft_strdup(color);
+			if (flags & F_BG)
+			{
+				color = ft_strdup("\x1b[01;40;31m");
+				free(ls->color);
+				ls->color = ft_strdup(color);
+			}
 		}
-		else
+		else if (flags & F_BG)
 			color = make_color(st->st_mode);
 		free(st);
 		(flags & F_BG) ? ft_printf("%s%s%s -> ", ls->color, ls->name, C_NO)
 			: ft_printf("%s -> ", ls->name);
 		(flags & F_BG) ? ft_printf("%s%s%s\n", color, buf, C_NO)
 			: ft_printf("%s\n", buf);
-		free(color);
+		if (color)
+			free(color);
 	}
 }
 
