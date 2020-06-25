@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void	ls_type(t_stat *stat)
+void			ls_type(t_stat *stat)
 {
 	if (S_ISLNK(stat->st_mode))
 		ft_putchar('l');
@@ -30,7 +30,7 @@ void	ls_type(t_stat *stat)
 		ft_putchar('s');
 }
 
-void	ls_mode(mode_t mode, int *n)
+void			ls_mode(mode_t mode, int *n)
 {
 	ft_putchar((S_IRUSR & mode) ? 'r' : '-');
 	ft_putchar((S_IWUSR & mode) ? 'w' : '-');
@@ -55,7 +55,7 @@ void	ls_mode(mode_t mode, int *n)
 	ft_putchar(' ');
 }
 
-void	print_time(t_ls *ls, int flag)
+void			print_time(t_ls *ls, int flag)
 {
 	time_t	ttime;
 	time_t	t;
@@ -72,6 +72,20 @@ void	print_time(t_ls *ls, int flag)
 	}
 	else
 		ft_printf("%.12s ", str);
+}
+
+int		print_fp_option(t_ls *ls, int flags)
+{
+	if (S_ISDIR(ls->stat->st_mode))
+		ft_putchar('/');
+	else if (flags & F_BF && S_ISFIFO(ls->stat->st_mode))
+		ft_putchar('|');
+	else if (flags & F_BF && (S_IXUSR & ls->stat->st_mode
+		|| S_IXGRP & ls->stat->st_mode ||
+		S_IXOTH & ls->stat->st_mode))
+		ft_putchar('*');
+	ft_putchar('\n');
+	return (1);
 }
 
 long unsigned	block_size(t_ls *ls)

@@ -17,4 +17,10 @@ echo ""
 echo ""
 ./42bonus_opt_f.sh $1 $2
 echo ""
+./42bonus_opt_F.sh $1 $2
+echo ""
+./42bonus_opt_p.sh $1 $2
+echo ""
+./42bonus_opt_S.sh $1 $2
+echo ""
 ./42bonus_opt_u.sh $1 $2

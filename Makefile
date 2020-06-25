@@ -2,8 +2,9 @@ NAME = ft_ls
 CC = gcc
 FLAGS =
 
-SRC = add_new_file.c init_flags.c ls_l_flag.c ls_print_basic.c \
-	ls_print_table.c ls_print.c main.c sort_check_dots.c sort_list.c
+SRC = add_new_file.c init_flags.c ls_print_table_helper.c ls_print_basic.c \
+	ls_print_table.c ls_print.c main.c sort_check_dots.c sort_list.c \
+	set_size.c helper.c print_m_list.c
 OBJ = $(addprefix $(OBJDIR), $(SRC:.c=.o))
 LIBFT = $(LIBDIR)libft.a
 INC = $(LIBDIR)includes/libft.h $(INCDIR)ft_ls.h

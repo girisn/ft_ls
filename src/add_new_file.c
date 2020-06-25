@@ -22,7 +22,7 @@ char	*make_color(mode_t mode)
 	else if (S_ISLNK(mode))
 		return (ft_strdup("\x1b[01;36m"));
 	else if (S_ISFIFO(mode))
-		return(ft_strdup("\x1b[40;33m"));
+		return (ft_strdup("\x1b[40;33m"));
 	else if (S_ISSOCK(mode))
 		return (ft_strdup("\x1b[01;35m"));
 	else if (S_ISBLK(mode) || S_ISCHR(mode))
@@ -90,46 +90,48 @@ t_ls	*new_file(char **path, char *name, t_stat *stat, int n)
 	return (file);
 }
 
-int		add_new_file(char *path, char *name, t_ls **file, int n, int flags)
+t_stat	*make_stat(char *name, int n)
+{
+	t_stat	*st;
+
+	if (!(st = (t_stat*)malloc(sizeof(t_stat))))
+		ls_error("malloc", -1);
+	if ((lstat(name, st)) == -1)
+	{
+		free(st);
+		return (NULL);
+	}
+	if (n == 1 && S_ISLNK(st->st_mode) && n != 2)
+		if ((stat(name, st)) == -1)
+			if ((lstat(name, st)) == -1)
+			{
+				free(st);
+				return (NULL);
+			}
+	return (st);
+}
+
+int		add_new_file(char *path, char *name, t_ls **file, int n)
 {
 	t_stat	*st;
 	char	*full_name;
 	t_ls	*tmp;
 
 	tmp = *file;
-	if (!(st = (t_stat*)malloc(sizeof(t_stat))))
-		ls_error("malloc", -1);
 	if (!(full_name = make_path(path, name)))
-	{
-		free(st);
 		ls_error("malloc", -1);
-	}
-	if (flags & F_L || flags & F_T)
+	if (!(st = make_stat(full_name, n)))
 	{
-		if ((lstat(full_name, st)) == -1)
-		{
-			free(st);
-			free(full_name);
-			return (0);
-		}
-	}
-	else
-	{
-		if ((stat(full_name, st)) == -1)
-			if ((lstat(full_name, st)) == -1)
-			{
-				free(st);
-				free(full_name);
-				return (0);
-			}
+		free(full_name);
+		return (0);
 	}
 	if (*file == NULL)
-		*file = new_file(&full_name, name, st, n);
+		*file = new_file(&full_name, name, st, (n == 2) ? 1 : n);
 	else
 	{
 		while (tmp->next)
 			tmp = tmp->next;
-		tmp->next = new_file(&full_name, name, st, n);
+		tmp->next = new_file(&full_name, name, st, (n == 2) ? 1 : n);
 	}
 	return (1);
 }

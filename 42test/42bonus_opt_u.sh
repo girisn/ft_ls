@@ -29,8 +29,8 @@ test_name="42_bonus_opt_u"
 echo "=========================== "$test_name" ===========================\n";
 ###1
 touch a b c d e && touch -at 201212101830.55 c
-./ft_ls -1tu 2>&1 > result/r1 2>&1;
-ls -1tu 2>&1 > result/r2 2>&1;
+./ft_ls -1tu | grep -v result 2>&1 > result/r1 2>&1;
+ls -1tu | grep -v result 2>&1 > result/r2 2>&1;
 diff result/r1 result/r2 > result/r3;
 	nb_test=$(($nb_test+1))
 	nb=$(($nb+1))
@@ -53,8 +53,8 @@ else
 fi
 
 ###2
-./ft_ls -1tur 2>&1 > result/r1 2>&1;
-ls -1tur 2>&1 > result/r2 2>&1;
+./ft_ls -1tur 2>&1 | grep -v result > result/r1 2>&1;
+ls -1tur 2>&1 | grep -v result > result/r2 2>&1;
 diff result/r1 result/r2 > result/r3;
 	nb_test=$(($nb_test+1))
 	nb=$(($nb+1))

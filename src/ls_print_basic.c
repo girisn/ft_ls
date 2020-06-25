@@ -12,27 +12,6 @@
 
 #include "ft_ls.h"
 
-/*int		ls_maxlen(t_ls *ls, int *av, int *n)
-{
-	int		max;
-	int		tmp;
-
-	max = 0;
-	tmp = 0;
-	*av = 0;
-	*n = 0;
-	while (ls)
-	{
-		if ((tmp = ft_strlen(ls->name)) > max)
-			max = tmp;
-		*av += tmp;
-		(*n)++;
-		ls = ls->next;
-	}
-	*av /= *n;
-	return (max);
-}*/
-
 long int	ft_max(long int a, long int b)
 {
 	return (b & ((a - b) >> 31) | a & (~(a - b) >> 31));
@@ -160,7 +139,7 @@ int static			print_table_1(t_ls *lst, t_dot opt, t_dot max_len, int flags) //lst
     counter = opt.y;
     while (lst && counter--) // пока не закончились строчки
     {
-        tmp_column = opt.x; // 
+        tmp_column = opt.x; // отрегулировать ширину
         lst_tmp = lst->next;
         while (lst && tmp_column--) // пока есть место в строке
         {
@@ -185,79 +164,54 @@ int static			print_table_1(t_ls *lst, t_dot opt, t_dot max_len, int flags) //lst
 }
 
 
+int					ft_intblock_size(t_ls *ls)
+{
+	int		len;
+	int		tmp;
 
+	len = 0;
+	tmp = 0;
+	while (ls)
+	{
+		if (len < (tmp = ft_numlen(ls->stat->st_blocks)))
+			len = tmp;
+		ls = ls->next;
+	}
+	return (len);
+}
 
 int					print_basic(t_ls *ls, int flags)
 {
-	int				max_len;
 	int				av;
 	int				num; //общее кол - во файлов
 	struct winsize	*ws; //
 	t_dot           len_max; // макс число строк или  столбцов при печати в одну строку илои столбец
 	t_dot          opt;
 	t_ls            *tmp;
+	int				len;
 
-	sort_list(ls, flags);
-	ws = (struct winsize*)malloc(sizeof(struct winsize));
-
-	if (flags & F_ONE) // печать в 1 столбец
+	len = (flags & F_S) ? ft_intblock_size(ls) : 0;
+	(flags & F_S) ? ft_printf("total %lu\n", block_size(ls)) : 0;
+	if (!(flags & F_ONE))
+		ws = (struct winsize*)malloc(sizeof(struct winsize));
+	if (flags & F_ONE)
 		while (ls)
 		{
+			(flags & F_S) ? print_str(len, 1, NULL, ls->stat->st_blocks / 2) : 0;
 			(flags & F_BG) ? ft_printf("%s%s%s\n", ls->color, ls->name, C_NO)
-				: ft_printf("%s\n", ls->name);
+				: ft_putstr(ls->name);
+			(flags & F_P || flags & F_BF) ? print_fp_option(ls, flags) : ft_putchar('\n');
 			ls = ls->next;
 		}
 	else
 	{
-//		max_len = ls_maxlen(ls, &av, &num);
-		len_max.x = ls_maxlen(ls, &av, &num) + 0; // !!!! +4 +1 если флаг G (без владельцкф файла)
-        // len_max.y = (flags & LS_S) ? lst_blocks_len(lst, &total) : 0;;// если флаг не S - тогда один столбец и строк по кол-ву файлов
+		len_max.x = ls_maxlen(ls, &av, &num);  //x - строки длина
         len_max.y = 0;
-        //     if (flags & LS_S)
-        // ft_printf("total %d\n", total);
 		ioctl(0, TIOCGWINSZ, ws);
-
-	opt.x = ws->ws_col / (len_max.x + len_max.y);//если  не флаг_128
-	opt.y =0;
-	tmp = ls;
-		while (tmp)
-        {
-           ++opt.y;
-            tmp = tmp->next;
-        }
-		//(!(flags & 128))
-	opt.y = + opt.y /opt.x; //+(opt.y %opt.x ? 1: 0) 
-	print_table_1(ls,opt, len_max, flags);
+		opt.x = ws->ws_col / (len_max.x);//+ len_max.y);
+		opt.y = num;
+		opt.y = opt.y / opt.x + (opt.y % opt.x ? 1 : 0);
+		print_table_1(ls,opt, len_max, flags);
 	}
 	return (1);
 }
-
-
-
-
-/*
-int		print_basic(t_ls *ls, int flags)
-{
-//	int				max_len;
-//	int				av;
-//	int				num;
-//	struct winsize	*ws;
-
-	sort_list(ls, flags);
-//	ws = (struct winsize*)malloc(sizeof(struct winsize));
-//	if (flags & F_ONE)
-		while (ls)
-		{
-			(flags & F_BG) ? ft_printf("%s%s%s\n", ls->color, ls->name, C_NO)
-				: ft_printf("%s\n", ls->name);
-			ls = ls->next;
-		}*/
-/*	else
-	{
-		max_len = ls_maxlen(ls, &av, &num);
-		ioctl(0, TIOCGWINSZ, ws);
-		ft_printf("col = %d, row = %d, len = %d, num = %d\n", ws->ws_col, ws->ws_row, max_len, num);
-	}*/
-/*	return (1);
-}
-*/

@@ -15,18 +15,15 @@
 t_ls	*sort_no_flag(t_ls *tmp, int flags, int *flag, int f)
 {
 	t_stat	*s;
-	char	*p;
 
 	(void)f;
 	s = tmp->stat;
-	p = tmp->path;
 	if (check_dots(tmp->name, tmp->next->name) > 0)
 	{
 		ft_swap_str(&(tmp->name), &(tmp->next->name));
 		tmp->stat = tmp->next->stat;
 		tmp->next->stat = s;
-		tmp->path = tmp->next->path;
-		tmp->next->path = p;
+		ft_swap_str(&(tmp->path), &(tmp->next->path));
 		ft_swap_str(&(tmp->color), &(tmp->next->color));
 		*flag = 1;
 	}
@@ -36,23 +33,42 @@ t_ls	*sort_no_flag(t_ls *tmp, int flags, int *flag, int f)
 t_ls	*sort_r_flag(t_ls *tmp, int flags, int *flag, int f)
 {
 	t_stat	*s;
-	char	*p;
 
 	(void)f;
 	s = tmp->stat;
-	p = tmp->path;
 	if (check_dots(tmp->name, tmp->next->name) < 0)
 	{
 		ft_swap_str(&(tmp->name), &(tmp->next->name));
 		tmp->stat = tmp->next->stat;
 		tmp->next->stat = s;
-		tmp->path = tmp->next->path;
-		tmp->next->path = p;
+		ft_swap_str(&(tmp->path), &(tmp->next->path));
 		ft_swap_str(&(tmp->color), &(tmp->next->color));
 		*flag = 1;
 	}
 	return (tmp);
 }
+
+t_ls	*sort_s_flag(t_ls *tmp, int flags, int *flag, int f)
+{
+	t_stat	*s;
+
+	s = tmp->stat;
+	if ((f == 0 && tmp->stat->st_size < tmp->next->stat->st_size)
+		|| (f == 1 && tmp->stat->st_size > tmp->next->stat->st_size)
+		|| (tmp->stat->st_size == tmp->next->stat->st_size &&
+		((f == 0 && check_dots(tmp->name, tmp->next->name) > 0) ||
+		(f == 1 && check_dots(tmp->name, tmp->next->name) < 0))))
+	{
+		ft_swap_str(&(tmp->name), &(tmp->next->name));
+		ft_swap_str(&(tmp->path), &(tmp->next->path));
+		tmp->stat = tmp->next->stat;
+		tmp->next->stat = s;
+		ft_swap_str(&(tmp->color), &(tmp->next->color));
+		*flag = 1;
+	}
+	return (tmp);
+}
+
 
 t_ls	*sort_t_flag(t_ls *tmp, int flags, int *flag, int f)
 {
@@ -115,7 +131,11 @@ t_ls	*sort_list(t_ls *ls, int flag)
 		return (NULL);
 	if (flag & F_F)
 		return (ls);
-	if (!(flag & F_R) && !(flag & F_T))
+	if (!(flag & F_T) && flag & F_BS && !(flag & F_R))
+		ls = sorting(ls, flag, 0, sort_s_flag);
+	else if (!(flag & F_T) && flag & F_BS && flag & F_R)
+		ls = sorting(ls, flag, 1, sort_s_flag);
+	else if (!(flag & F_R) && !(flag & F_T))
 		ls = sorting(ls, flag, 0, sort_no_flag);
 	else if (flag & F_R && !(flag & F_T))
 		ls = sorting(ls, flag, 0, sort_r_flag);

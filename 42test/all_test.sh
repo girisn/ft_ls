@@ -21,6 +21,8 @@ echo ""
 #echo ""
 ./42test_no_username.sh $1 $2
 echo ""
+./42test_buggy_ls_behaviors.sh $1 $2
+echo ""
 ./42test_opt_a.sh $1 $2
 echo ""
 ./42test_opt_aR.sh $1 $2

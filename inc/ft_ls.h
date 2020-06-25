@@ -33,17 +33,26 @@
 # define F_C	2
 # define F_D	4
 # define F_F	8
-# define F_BG	16
-# define F_L	32
-# define F_R	64
-# define F_BR	128
-# define F_T	256
-# define F_U	512
-# define F_ONE	1024
+# define F_BF	16
+# define F_BG	32
+# define F_I	64
+# define F_L	128
+# define F_M	256
+# define F_N	512
+# define F_O	1024
+# define F_P	2048
+# define F_R	4096
+# define F_BR	8192
+# define F_S	16384
+# define F_BS	32768
+# define F_T	65536
+# define F_U	131072
+# define F_ONE	262144
 
 # define C_NO	"\x1b[0m"
 
-typedef struct stat t_stat;
+typedef struct			stat t_stat;
+typedef struct winsize	t_winsize;
 
 typedef struct		s_ls
 {
@@ -59,7 +68,7 @@ typedef struct		s_ls
 int		check_dots(char *s1, char *s2);
 t_ls	*sort_list(t_ls *ls, int flag);
 
-int		add_new_file(char *path, char *name, t_ls **file, int n, int flags);
+int		add_new_file(char *path, char *name, t_ls **file, int n);
 
 int		ls_error(char *str, int n);
 void	free_list(t_ls **ls);
@@ -73,11 +82,22 @@ int		print_table(t_ls *ls, int flags);
 void	ls_type(t_stat *stat);
 void	ls_mode(mode_t mode, int *n);
 void	print_time(t_ls *ls, int flag);
+int		print_fp_option(t_ls *ls, int flags);
 long unsigned	block_size(t_ls *ls);
+
 void	print_l_options(t_ls *ls, int *n, int flag);
-int		check_size(t_ls *ls, int **n);
+int		check_size(t_ls *ls, int **n, int flags);
 
 char	*make_color(mode_t mode);
 int		ft_strcmp_abc(char *s1, char *s2, int n, int m);
+
+int		ft_numlen(long long int n);
+int		print_path(t_ls *ls, int args, int n, int flags);
+void	print_str(int len, int n, char *str, long long int num);
+int		print_fp_option(t_ls *ls, int flags);
+
+int		set_size(t_ls *ls, int **n, int flags);
+
+void	print_m_list(t_ls *ls, int flags);
 
 #endif

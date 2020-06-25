@@ -16,24 +16,11 @@ int		print_content(t_ls *ls, int flags)
 {
 	if (flags & F_L)
 		print_table(ls, flags);
+	else if (flags & F_M)
+		print_m_list(ls, flags);
 	else
 		print_basic(ls, flags);
 	return (1);
-}
-
-int		print_path(t_ls *ls, int args, int n, int flags)
-{
-	if (flags & F_BR && n && !args)
-	{
-		ft_printf(".:\n");
-		return (0);
-	}
-	if (!n)
-		ft_printf("\n%s:\n", ls->path);
-	else if ((args && args != 1) || (flags & F_A && flags & F_BR) ||
-		(flags & F_BR && args))
-		ft_printf("%s:\n", ls->path);
-	return (0);
 }
 
 t_ls	*read_folder(t_ls *ls, int flags, int *perm)
@@ -52,7 +39,7 @@ t_ls	*read_folder(t_ls *ls, int flags, int *perm)
 	}
 	while ((dir = readdir(folder)))
 		if (dir->d_name[0] != '.' || flags & F_A)
-			add_new_file(ls->path, dir->d_name, &tmp, 0, flags);
+			add_new_file(ls->path, dir->d_name, &tmp, 0);
 	if (folder)
 		closedir(folder);
 	return (tmp);
@@ -68,7 +55,7 @@ int		print_first(t_ls *ls, int args, int flags, int num)
 	if (num == 0)
 		return (num);
 	if (flags & F_L)
-		check_size(ls, &block);
+		check_size(ls, &block, flags);
 	if (args || flags & F_D)
 		while (ls)
 		{
@@ -108,9 +95,9 @@ int		print_list(t_ls *ls, int args, int fl, int n)
 			(fl & F_L && perm) ? ft_printf("total %lu\n", block_size(ls)) : 0;
 			if (ls)
 			{
-				sort_list(ls, fl);
+				(!(fl & F_F)) ? sort_list(ls, fl) : 0;
 				print_content(ls, fl);
-				print_list(ls, args, fl, 0);
+				(fl & F_BR) ? print_list(ls, args, fl, 0) : 0;
 				free_list(&ls);
 			}
 		}
