@@ -1,13 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_flags.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: btyrande <btyrande@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/03/05 18:25:55 by btyrande          #+#    #+#             */
+/*   Updated: 2020/03/06 19:03:32 by btyrande         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_LS_H
-#define FT_LS_H
+# define FT_LS_H
 
-#define _GNU_SOURCE
-#define STAT_HAVE_NSEC 1
-
-#include <sys/param.h>
+# define _GNU_SOURCE
+# define STAT_HAVE_NSEC 1
 
 # include "libft.h"
-
+# include <sys/param.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <dirent.h>
@@ -21,13 +31,11 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/ioctl.h>
-//# include <uuid/uuid.h>
 # include <sys/acl.h>
 # include <limits.h>
 # include <sys/sysmacros.h>
 # include <acl/libacl.h>
 # include <errno.h>
-
 
 # define F_A	1
 # define F_C	2
@@ -51,7 +59,7 @@
 
 # define C_NO	"\x1b[0m"
 
-typedef struct			stat t_stat;
+typedef struct stat		t_stat;
 typedef struct winsize	t_winsize;
 
 typedef struct		s_ls
@@ -64,40 +72,53 @@ typedef struct		s_ls
 	int				n;
 }					t_ls;
 
+typedef struct		s_dot
+{
+	int				x;
+	int				y;
+}					t_dot;
 
-int		check_dots(char *s1, char *s2);
-t_ls	*sort_list(t_ls *ls, int flag);
+int					check_dots(char *s1, char *s2);
+t_ls				*sort_list(t_ls *ls, int flag);
 
-int		add_new_file(char *path, char *name, t_ls **file, int n);
+int					add_new_file(char *path, char *name, t_ls **file, int n);
 
-int		ls_error(char *str, int n);
-void	free_list(t_ls **ls);
+int					ls_error(char *str, int n);
+void				free_list(t_ls **ls);
 
-int		set_flags(int argc, char **argv, int *flags, int *spec);
+int					set_flags(int argc, char **argv, int *flags, int *spec);
 
-int		print_list(t_ls *ls, int args, int flags, int n);
-int		print_basic(t_ls *ls, int flags);
-int		print_table(t_ls *ls, int flags);
+void				print_list(t_ls *ls, int args, int flags, int n);
+int					print_basic(t_ls *ls, int flags);
+int					print_table(t_ls *ls, int flags);
 
-void	ls_type(t_stat *stat);
-void	ls_mode(mode_t mode, int *n);
-void	print_time(t_ls *ls, int flag);
-int		print_fp_option(t_ls *ls, int flags);
-long unsigned	block_size(t_ls *ls);
+void				ls_type(t_stat *stat);
+void				ls_mode(mode_t mode, int *n);
+void				print_time(t_ls *ls, int flag);
+int					print_fp_option(t_ls *ls, int flags);
+long unsigned		block_size(t_ls *ls);
 
-void	print_l_options(t_ls *ls, int *n, int flag);
-int		check_size(t_ls *ls, int **n, int flags);
+void				print_l_options(t_ls *ls, int *n, int flag);
+int					check_size(t_ls *ls, int **n, int flags);
 
-char	*make_color(mode_t mode);
-int		ft_strcmp_abc(char *s1, char *s2, int n, int m);
+char				*make_color(mode_t mode);
+int					ft_strcmp_abc(char *s1, char *s2, int n, int m);
 
-int		ft_numlen(long long int n);
-int		print_path(t_ls *ls, int args, int n, int flags);
-void	print_str(int len, int n, char *str, long long int num);
-int		print_fp_option(t_ls *ls, int flags);
+int					ft_numlen(long long int n);
+int					print_path(t_ls *ls, int args, int n, int flags);
+int					ft_intblock_size(t_ls *ls, int n);
+void				print_str(int len, int n, char *str, long long int num);
+int					print_fp_option(t_ls *ls, int flags);
 
-int		set_size(t_ls *ls, int **n, int flags);
+int					set_size(t_ls *ls, int **n, int flags);
 
-void	print_m_list(t_ls *ls, int flags);
+void				print_m_list(t_ls *ls, int flags);
+
+int					print_one_list(t_ls *ls, int flags);
+
+t_ls				*sort_no_flag(t_ls *tmp, int flags, int *flag, int f);
+t_ls				*sort_r_flag(t_ls *tmp, int flags, int *flag, int f);
+t_ls				*sort_s_flag(t_ls *tmp, int flags, int *flag, int f);
+t_ls				*sort_t_flag(t_ls *tmp, int flags, int *flag, int f);
 
 #endif

@@ -59,12 +59,17 @@ void	free_list(t_ls **ls)
 	while (*ls)
 	{
 		tmp = (*ls)->next;
-		free((*ls)->name);
-		free((*ls)->path);
-		free((*ls)->stat);
-		free((*ls)->color);
+		if ((*ls)->name)
+			free((*ls)->name);
+		if ((*ls)->path)
+			free((*ls)->path);
+		if ((*ls)->stat)
+			free((*ls)->stat);
+		if ((*ls)->color)
+			free((*ls)->color);
 		(*ls)->next = NULL;
-		free(*ls);
+		if (*ls)
+			free(*ls);
 		*ls = tmp;
 	}
 }
@@ -112,7 +117,8 @@ int		main(int argc, char **argv)
 	args = (spec) ? argc - i - 2 : argc - i - 1;
 	ls = init_list(args, argc, argv, flags);
 	(!(flags & F_F)) ? sort_list(ls, flags) : 0;
-	print_list(ls, args, flags, 1);
+	if (ls)
+		print_list(ls, args, flags, 1);
 	if (ls)
 		free_list(&ls);
 	return (0);

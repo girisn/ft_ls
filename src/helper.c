@@ -63,18 +63,43 @@ int		check_size(t_ls *ls, int **n, int flags)
 	return (1);
 }
 
+int		ft_intblock_size(t_ls *ls, int n)
+{
+	int		len;
+	int		tmp;
+
+	len = 0;
+	tmp = 0;
+	while (ls)
+	{
+		if (n == 0 && len < (tmp = ft_numlen(ls->stat->st_blocks / 2)))
+			len = tmp;
+		else if (n == 1 && len < (tmp = ft_numlen(ls->stat->st_ino)))
+			len = tmp;
+		ls = ls->next;
+	}
+	return (len);
+}
+
 void	print_str(int len, int n, char *str, long long int num)
 {
 	int		i;
 	int		space;
 
 	i = -1;
-	space = (n == 0) ? len - ft_strlen(str) : len - ft_numlen(num);
-	if (n == 0 && str)
+	if (len == 0)
+		space = 0;
+	else
+		space = (n == 0 || n == 3) ?
+			len - ft_strlen(str) : len - ft_numlen(num);
+	if ((n == 0 || n == 3) && str)
 		ft_printf("%s", str);
 	while (++i < space)
 		ft_putchar(' ');
 	if (n == 1 || n == 2)
 		ft_printf("%lld", num);
-	(n == 2) ? ft_putstr(", ") : ft_putchar(' ');
+	if (n == 2)
+		ft_putstr(", ");
+	else if (n != 3)
+		ft_putchar(' ');
 }

@@ -14,12 +14,11 @@
 
 void	print_m_list_helper(t_ls *ls, int flags, int *first, t_winsize *ws)
 {
-	int		len;
-	int		max_len;
-	int		tmp;
+	int			len;
+	static int	max_len;
+	int			tmp;
 
 	len = 0;
-	max_len = 0;
 	tmp = 0;
 	len = ft_strlen(ls->name);
 	tmp = max_len + len;
@@ -48,6 +47,8 @@ void	print_m_list(t_ls *ls, int flags)
 
 	ws = NULL;
 	first = 1;
+	if (!ls)
+		return ;
 	if (!(ws = (struct winsize*)malloc(sizeof(struct winsize))))
 		ls_error("malloc", -1);
 	if (ioctl(0, TIOCGWINSZ, ws))

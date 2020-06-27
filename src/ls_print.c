@@ -14,10 +14,13 @@
 
 int		print_content(t_ls *ls, int flags)
 {
+	(!(flags & F_F)) ? sort_list(ls, flags) : 0;
 	if (flags & F_L)
 		print_table(ls, flags);
 	else if (flags & F_M)
 		print_m_list(ls, flags);
+	else if (flags & F_ONE)
+		print_one_list(ls, flags);
 	else
 		print_basic(ls, flags);
 	return (1);
@@ -47,11 +50,10 @@ t_ls	*read_folder(t_ls *ls, int flags, int *perm)
 
 int		print_first(t_ls *ls, int args, int flags, int num)
 {
-	int		n;
 	t_stat	*s;
 	int		*block;
 
-	n = num;
+	block = NULL;
 	if (num == 0)
 		return (num);
 	if (flags & F_L)
@@ -65,27 +67,25 @@ int		print_first(t_ls *ls, int args, int flags, int num)
 					print_l_options(ls, block, flags);
 				else
 					ft_printf("%s\n", ls->name);
-				n = 0;
+				num = 0;
 			}
 			ls = ls->next;
 		}
-	if (flags & F_L)
+	if (flags & F_L && block)
 		free(block);
-	return (n);
+	return (num);
 }
 
-int		print_list(t_ls *ls, int args, int fl, int n)
+void	print_list(t_ls *ls, int args, int fl, int n)
 {
 	t_ls	*tmp;
 	int		perm;
 
 	if (ls == NULL || (!(fl & F_BR) && n != 1))
-		return (1);
+		return ;
 	tmp = ls;
 	n = print_first(tmp, args, fl, n);
-	if (fl & F_D)
-		return (1);
-	while (tmp)
+	while (tmp && !(fl & F_D))
 	{
 		if ((S_ISDIR(tmp->stat->st_mode) && (n || (ft_strcmp(tmp->name, "..")
 			&& ft_strcmp(tmp->name, ".")) || tmp->n == 1)))
@@ -95,7 +95,6 @@ int		print_list(t_ls *ls, int args, int fl, int n)
 			(fl & F_L && perm) ? ft_printf("total %lu\n", block_size(ls)) : 0;
 			if (ls)
 			{
-				(!(fl & F_F)) ? sort_list(ls, fl) : 0;
 				print_content(ls, fl);
 				(fl & F_BR) ? print_list(ls, args, fl, 0) : 0;
 				free_list(&ls);
@@ -103,5 +102,4 @@ int		print_list(t_ls *ls, int args, int fl, int n)
 		}
 		tmp = tmp->next;
 	}
-	return (1);
 }

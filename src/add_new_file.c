@@ -50,7 +50,9 @@ char	*make_path(char *path, char *name)
 	n = ft_strlen(name);
 	tmp = 0;
 	(path[0]) ? n += ft_strlen(path) + 1 : 0;
-	(n) ? full_path = (char*)malloc(sizeof(char) * (n + 1)) : 0;
+	if (n)
+		if (!(full_path = (char*)malloc(sizeof(char) * (n + 1))))
+			ls_error("malloc", -1);
 	i = -1;
 	while (path[++i])
 	{
@@ -69,6 +71,7 @@ t_ls	*new_file(char **path, char *name, t_stat *stat, int n)
 {
 	t_ls	*file;
 
+	file = NULL;
 	if (!name || !stat)
 	{
 		free(*path);
@@ -78,14 +81,12 @@ t_ls	*new_file(char **path, char *name, t_stat *stat, int n)
 	if (!(file = (t_ls*)malloc(sizeof(t_ls))))
 		ls_error("malloc", -1);
 	if (!(file->name = ft_strdup(name)))
-	{
-		free(file);
 		ls_error("malloc", -1);
-	}
+	if (!(file->color = make_color(stat->st_mode)))
+		ls_error("malloc", -1);
 	file->path = *path;
 	file->stat = stat;
 	file->next = NULL;
-	file->color = make_color(stat->st_mode);
 	file->n = n;
 	return (file);
 }

@@ -12,27 +12,42 @@
 
 #include "ft_ls.h"
 
-void	print_name_helper(t_ls *ls, int flags)
+void	color_helper(t_ls *ls, int flags, char **color, char buf[NAME_MAX + 1])
 {
-	char	buf[NAME_MAX + 1];
-	char	*color;
 	t_stat	*st;
 
-	ft_bzero(buf, NAME_MAX + 1);
-	readlink(ls->path, buf, NAME_MAX);
-	st = (t_stat*)malloc(sizeof(t_stat));
+	st = NULL;
+	if (!(st = (t_stat*)malloc(sizeof(t_stat))))
+		ls_error("malloc", -1);
 	if ((stat(buf, st)) == -1)
 	{
 		if (flags & F_BG)
 		{
-			color = ft_strdup("\x1b[01;40;31m");
-			free(ls->color);
-			ls->color = ft_strdup(color);
+			if (!(*color = ft_strdup("\x1b[01;40;31m")))
+				ls_error("malloc", -1);
+			if (ls->color)
+				free(ls->color);
+			if (!(ls->color = ft_strdup("\x1b[01;40;31m")))
+				ls_error("malloc", -1);
 		}
 	}
 	else if (flags & F_BG)
-		color = make_color(st->st_mode);
-	free(st);
+		if (!(*color = make_color(st->st_mode)))
+			ls_error("malloc", -1);
+	if (st)
+		free(st);
+}
+
+void	print_name_helper(t_ls *ls, int flags)
+{
+	char	buf[NAME_MAX + 1];
+	char	*color;
+
+	color = NULL;
+	ft_bzero(buf, NAME_MAX + 1);
+	if ((readlink(ls->path, buf, NAME_MAX)) == -1)
+		ls_error("readlink", -1);
+	color_helper(ls, flags, &color, buf);
 	(flags & F_BG) ? ft_printf("%s%s%s -> ", ls->color, ls->name, C_NO)
 		: ft_printf("%s -> ", ls->name);
 	(flags & F_BG) ? ft_printf("%s%s%s", color, buf, C_NO)

@@ -14,6 +14,8 @@
 
 void			ls_type(t_stat *stat)
 {
+	if (!stat)
+		return ;
 	if (S_ISLNK(stat->st_mode))
 		ft_putchar('l');
 	else if (S_ISREG(stat->st_mode))
@@ -32,6 +34,8 @@ void			ls_type(t_stat *stat)
 
 void			ls_mode(mode_t mode, int *n)
 {
+	if (!mode)
+		return ;
 	ft_putchar((S_IRUSR & mode) ? 'r' : '-');
 	ft_putchar((S_IWUSR & mode) ? 'w' : '-');
 	if (S_ISUID & mode)
@@ -61,6 +65,8 @@ void			print_time(t_ls *ls, int flag)
 	time_t	t;
 	char	*str;
 
+	if (!ls)
+		return ;
 	t = (flag & F_U) ? ls->stat->st_atime : ls->stat->st_mtime;
 	(flag & F_C) ? t = ls->stat->st_ctime : 0;
 	str = ctime(&t) + 4;
@@ -74,8 +80,10 @@ void			print_time(t_ls *ls, int flag)
 		ft_printf("%.12s ", str);
 }
 
-int		print_fp_option(t_ls *ls, int flags)
+int				print_fp_option(t_ls *ls, int flags)
 {
+	if (!ls)
+		return (0);
 	if (S_ISDIR(ls->stat->st_mode))
 		ft_putchar('/');
 	else if (flags & F_BF && S_ISFIFO(ls->stat->st_mode))

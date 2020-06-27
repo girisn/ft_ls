@@ -13,7 +13,7 @@
 NAME = libft.a
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -O0
 
 SRC =	ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
 		ft_isprint.c ft_itoa.c ft_lstadd.c ft_lstdel.c ft_lstdelone.c \
@@ -28,7 +28,7 @@ SRC =	ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
 		ft_strstr.c ft_strsub.c ft_strtrim.c ft_tolower.c ft_toupper.c \
 		get_next_line.c ft_strchri.c ft_countwords.c \
 		ft_printf.c parse_options.c pf_chars.c pf_numbers_signed.c \
-		pf_numbers_unsigned.c pf_numbers_float.c ft_swap_str.c
+		pf_numbers_unsigned.c pf_numbers_float.c ft_swap_str.c ft_issimb.c
 
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
