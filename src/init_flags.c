@@ -56,7 +56,7 @@ int		set_options(char *str, int *flags)
 		if (str[i] == 'f')
 			*flags |= F_ONE;
 		if (*flags & F_L && str[i] == 'm')
-			*flags & !(F_L | F_N | F_O);
+			*flags &= !(F_L | F_N | F_O);
 		if ((str[i] == 'o' || str[i] == 'n') && !(*flags & F_L))
 			*flags |= F_L;
 		if (str[i] == 'f')
@@ -70,7 +70,6 @@ int		set_flags(int argc, char **argv, int *flags, int *spec)
 {
 	int		i;
 	int		n;
-	int		option;
 
 	i = 0;
 	n = 0;

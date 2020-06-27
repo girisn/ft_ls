@@ -17,6 +17,7 @@ t_ls	*sort_no_flag(t_ls *tmp, int flags, int *flag, int f)
 	t_stat	*s;
 
 	(void)f;
+	(void)flags;
 	s = tmp->stat;
 	if (check_dots(tmp->name, tmp->next->name) > 0)
 	{
@@ -35,6 +36,7 @@ t_ls	*sort_r_flag(t_ls *tmp, int flags, int *flag, int f)
 	t_stat	*s;
 
 	(void)f;
+	(void)flags;
 	s = tmp->stat;
 	if (check_dots(tmp->name, tmp->next->name) < 0)
 	{
@@ -52,6 +54,7 @@ t_ls	*sort_s_flag(t_ls *tmp, int flags, int *flag, int f)
 {
 	t_stat	*s;
 
+	(void)flags;
 	s = tmp->stat;
 	if ((f == 0 && tmp->stat->st_size < tmp->next->stat->st_size)
 		|| (f == 1 && tmp->stat->st_size > tmp->next->stat->st_size)

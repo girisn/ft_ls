@@ -1,6 +1,6 @@
 NAME = ft_ls
 CC = gcc
-FLAGS = -O0
+FLAGS = -O0 -Wall -Wextra -Werror
 
 SRC = add_new_file.c init_flags.c ls_print_table_helper.c ls_print_basic.c \
 	ls_print_table.c ls_print.c main.c sort_check_dots.c sort_list.c \

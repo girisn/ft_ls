@@ -50,7 +50,6 @@ t_ls	*read_folder(t_ls *ls, int flags, int *perm)
 
 int		print_first(t_ls *ls, int args, int flags, int num)
 {
-	t_stat	*s;
 	int		*block;
 
 	block = NULL;

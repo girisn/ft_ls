@@ -20,7 +20,8 @@ int			ls_maxlen(t_ls *ls, int *n, t_winsize *ws, int flags)
 
 	max = 0;
 	tmp = 0;
-	*n = 0;
+	len.x = 0;
+	len.y = 0;
 	while (ls)
 	{
 		if ((tmp = ft_strlen(ls->name)) > max)
@@ -33,7 +34,7 @@ int			ls_maxlen(t_ls *ls, int *n, t_winsize *ws, int flags)
 		ls = ls->next;
 	}
 	tmp = ws->ws_col / max;
-	max += (tmp - 1) * 2;
+	max += 2;
 	max += len.x + len.y;
 	(len.x) ? max += 1 : 0;
 	(len.y) ? max += 1 : 0;
@@ -85,6 +86,7 @@ int			print_basic(t_ls *ls, int flags)
 	int				max;
 
 	ws = NULL;
+	num = 0;
 	(flags & F_S) ? ft_printf("total %lu\n", block_size(ls)) : 0;
 	if (!(ws = (struct winsize*)malloc(sizeof(struct winsize))))
 		ls_error("malloc", -1);

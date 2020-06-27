@@ -44,10 +44,8 @@ int		print_path(t_ls *ls, int args, int n, int flags)
 
 int		check_size(t_ls *ls, int **n, int flags)
 {
-	int		tmp;
 	int		i;
 
-	tmp = 0;
 	i = -1;
 	if (!ls)
 		return (0);
@@ -89,9 +87,10 @@ void	print_str(int len, int n, char *str, long long int num)
 	i = -1;
 	if (len == 0)
 		space = 0;
+	else if (n == 0 || n == 3)
+		space = (len - ft_strlen(str));
 	else
-		space = (n == 0 || n == 3) ?
-			len - ft_strlen(str) : len - ft_numlen(num);
+		space = len - ft_numlen(num);
 	if ((n == 0 || n == 3) && str)
 		ft_printf("%s", str);
 	while (++i < space)

@@ -58,11 +58,6 @@ void	print_name_helper(t_ls *ls, int flags)
 
 void	print_name(t_ls *ls, int flags)
 {
-	char	buf[NAME_MAX + 1];
-	char	*color;
-	t_stat	*st;
-
-	color = NULL;
 	if (!S_ISLNK(ls->stat->st_mode))
 		(flags & F_BG) ? ft_printf("%s%s%s", ls->color, ls->name, C_NO)
 			: ft_printf("%s", ls->name);
@@ -102,11 +97,8 @@ void	print_l_options(t_ls *ls, int *n, int flag)
 int		print_table(t_ls *ls, int flags)
 {
 	int				*n;
-	int				s_len;
-	short unsigned	size;
 
 	n = NULL;
-	s_len = 0;
 	if (!(check_size(ls, &n, flags)))
 		return (0);
 	while (ls)
